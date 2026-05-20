@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tibasosa</title>
+
+</head>
+
+<body>
+
+    <table border="1">
+
+        <tr>
+
+            <th>Animal</th>
+
+            <th>Nivel</th>
+
+            <th>Cruce</th>
+
+            <th>Información</th>
+
+        </tr>
+
+        {% for fila in datos %}
+
+        <tr>
+
+            <td>{{ fila["Animal"] }}</td>
+
+            <td>{{ fila["Nivel de aparición"] }}</td>
+
+            <td>{{ fila["Tipo de cruce"] }}</td>
+
+            <td>{{ fila["Información"] }}</td>
+
+        </tr>
+
+        {% endfor %}
+
+    </table>
+
+</body>
+
+</html>

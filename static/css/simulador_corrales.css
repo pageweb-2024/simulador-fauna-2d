@@ -1,0 +1,389 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    overflow:hidden;
+    font-family:Arial;
+    background:#111;
+}
+
+/* =========================
+   CONTENEDOR
+========================= */
+
+.simulador{
+    width:100%;
+    height:100vh;
+    display:flex;
+}
+
+/* =========================
+   CARRETERA
+========================= */
+
+.carretera{
+    width:75%;
+    height:100vh;
+    position:relative;
+    overflow:hidden;
+    background:#222;
+}
+
+.mapa-container{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    position:relative;
+}
+
+.fondo{
+    width:100%;
+    height:140%;
+    object-fit:cover;
+
+    position:absolute;
+    top:-20%;
+    left:0;
+
+    will-change:transform;
+}
+
+/* =========================
+   VEHÍCULO
+========================= */
+
+#vehiculo{
+    width:7vw;
+
+    min-width:70px;
+    max-width:130px;
+
+    position:absolute;
+
+    left:37%;
+    top:65%;
+
+    z-index:100;
+
+    transform:
+    translate(-50%, -50%);
+}
+
+/* =========================
+   HUD
+========================= */
+
+.hud{
+    position:absolute;
+
+    bottom:0;
+    left:0;
+
+    width:100%;
+    height:170px;
+
+    background:rgba(0,0,0,0.9);
+
+    display:flex;
+    justify-content:space-around;
+    align-items:center;
+
+    padding:10px 20px;
+
+    z-index:200;
+}
+
+/* =========================
+   TACÓMETRO
+========================= */
+
+.tacometro{
+    width:200px;
+    height:200px;
+
+    border-radius:50%;
+
+    position:relative;
+
+    background:#111;
+
+    border:8px solid #222;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
+
+/* NÚMEROS */
+
+.numero{
+    position:absolute;
+
+    color:white;
+
+    font-size:14px;
+    font-weight:bold;
+}
+
+.n0{ top:150px; left:30px; }
+.n20{ top:110px; left:15px; }
+.n40{ top:70px; left:35px; }
+.n60{ top:35px; left:75px; }
+.n80{ top:18px; left:125px; }
+.n100{ top:30px; right:40px; }
+.n120{ top:70px; right:15px; }
+.n140{ top:115px; right:10px; }
+.n160{ top:155px; right:28px; }
+
+/* AGUJA */
+
+.aguja{
+    width:5px;
+    height:80px;
+
+    background:red;
+
+    position:absolute;
+
+    bottom:50%;
+    left:50%;
+
+    transform:
+    translateX(-50%)
+    rotate(-130deg);
+
+    transform-origin:bottom center;
+
+    border-radius:10px;
+}
+
+/* CENTRO */
+
+.centro{
+    width:20px;
+    height:20px;
+
+    background:white;
+
+    border-radius:50%;
+
+    position:absolute;
+
+    z-index:20;
+}
+
+/* VELOCIDAD */
+
+.velocidad-digital{
+    position:absolute;
+
+    bottom:45px;
+
+    font-size:34px;
+
+    color:lime;
+
+    font-weight:bold;
+}
+
+.kmh{
+    position:absolute;
+
+    bottom:25px;
+
+    color:#ccc;
+
+    font-size:12px;
+}
+
+/* =========================
+   PANEL DERECHO
+========================= */
+
+.panel{
+    width:25%;
+    height:100vh;
+
+    background:white;
+
+    padding:20px;
+
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+}
+
+.panel h1{
+    width:100%;
+
+    background:red;
+    color:white;
+
+    text-align:center;
+
+    padding:15px;
+
+    border-radius:15px;
+}
+
+.senal{
+    width:180px;
+
+    margin-top:20px;
+}
+
+.panel h2{
+    color:red;
+
+    margin-top:15px;
+}
+
+.panel p{
+    margin-top:15px;
+
+    text-align:center;
+
+    font-size:17px;
+}
+
+.riesgo{
+    width:100%;
+
+    margin-top:20px;
+
+    background:#ffe1e1;
+
+    color:darkred;
+
+    padding:15px;
+
+    border-radius:15px;
+
+    text-align:center;
+
+    font-weight:bold;
+}
+
+/* =========================
+   CONFIGURACIÓN
+========================= */
+
+.opciones-simulador{
+    width:100%;
+
+    margin-top:20px;
+
+    background:#181818;
+
+    border-radius:15px;
+
+    padding:15px;
+
+    display:flex;
+    flex-direction:column;
+
+    gap:10px;
+}
+
+.opciones-simulador h2{
+    text-align:center;
+
+    color:lime;
+}
+
+.item-opcion{
+    background:#252525;
+
+    padding:10px;
+
+    border-radius:10px;
+
+    color:white;
+
+    font-size:14px;
+
+    display:flex;
+    justify-content:space-between;
+}
+
+.item-opcion span{
+    color:lime;
+
+    font-weight:bold;
+}
+
+/* =========================
+   BOTÓN
+========================= */
+
+.btn-finalizar{
+    margin-top:auto;
+
+    width:100%;
+
+    padding:15px;
+
+    border:none;
+
+    background:red;
+
+    color:white;
+
+    font-size:18px;
+
+    border-radius:15px;
+
+    cursor:pointer;
+}
+
+/* =========================
+   INFO
+========================= */
+
+.info{
+    text-align:center;
+}
+
+.info h3{
+    color:#aaa;
+
+    margin-bottom:10px;
+}
+
+.dato{
+    font-size:28px;
+
+    color:white;
+
+    font-weight:bold;
+}
+
+/* =========================
+   RESPONSIVE
+========================= */
+
+@media(max-width:1000px){
+
+    .simulador{
+        flex-direction:column;
+    }
+
+    .carretera{
+        width:100%;
+        height:70vh;
+    }
+
+    .panel{
+        width:100%;
+        height:auto;
+    }
+
+    .hud{
+        flex-wrap:wrap;
+        height:auto;
+        gap:20px;
+    }
+}

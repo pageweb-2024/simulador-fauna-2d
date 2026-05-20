@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='css/seleccion_carretera.css') }}">
+
+    <title>Selección de carretera</title>
+
+</head>
+
+<body>
+
+<main class="contenedor">
+
+    <h1>SELECCIONAR CARRETERA</h1>
+
+    <form action="/seleccion_vehiculo" method="POST">
+
+        <div class="grid-carreteras">
+
+            <!-- TIBASOSA -->
+
+            <label class="card-carretera">
+
+                <input type="radio"
+                name="carretera"
+                value="Tibasosa"
+                required>
+
+                <img src="{{ url_for('static', filename='img/tibasosa.jpg') }}">
+
+                <h2>Sogamoso - Tibasosa</h2>
+
+            </label>
+
+            <!-- CORRALES -->
+
+            <label class="card-carretera">
+
+                <input type="radio"
+                name="carretera"
+                value="Corrales">
+
+                <img src="{{ url_for('static', filename='img/corrales.jpg') }}">
+
+                <h2>Sogamoso - Corrales</h2>
+
+            </label>
+
+            <!-- IZA -->
+
+            <label class="card-carretera">
+
+                <input type="radio"
+                name="carretera"
+                value="Iza">
+
+                <img src="{{ url_for('static', filename='img/iza.jpg') }}">
+
+                <h2>Sogamoso - Iza</h2>
+
+            </label>
+
+        </div>
+
+        <div class="botones">
+
+            <button type="submit"
+            class="btn-continuar">
+
+                Continuar
+
+            </button>
+
+            <button type="button"
+            class="btn-volver"
+            onclick="window.location.href='/registro'">
+
+                Volver
+
+            </button>
+
+        </div>
+
+    </form>
+
+</main>
+
+</body>
+
+</html>

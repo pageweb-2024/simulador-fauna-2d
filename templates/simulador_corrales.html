@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Simulador Corrales</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_corrales.css') }}">
+
+</head>
+
+<body>
+
+    <!-- ===================================
+         CONTENEDOR PRINCIPAL
+    ==================================== -->
+
+    <main class="simulador">
+
+        <!-- ===================================
+             ZONA CARRETERA
+        ==================================== -->
+
+        <section class="carretera">
+
+            <!-- MAPA -->
+
+            <div class="mapa-container">
+
+                <img id="mapa" class="fondo" src="{{ url_for('static', filename='img/Sogamoso_corrales.png') }}">
+
+            </div>
+
+            <!-- ===================================
+                 VEHÍCULO
+            ==================================== -->
+
+            {% if vehiculo %}
+
+            <img id="vehiculo" class="vehiculo" src="{{ url_for('static', filename='img/' ~ vehiculo ~ '.png') }}">
+
+            {% else %}
+
+            <img id="vehiculo" class="vehiculo" src="{{ url_for('static', filename='img/default.png') }}">
+
+            {% endif %}
+
+            <!-- ===================================
+                 HUD
+            ==================================== -->
+
+            <footer class="hud">
+
+                <!-- TACÓMETRO -->
+
+                <div class="tacometro">
+
+                    <!-- NÚMEROS -->
+
+                    <div class="numero n0">0</div>
+                    <div class="numero n20">20</div>
+                    <div class="numero n40">40</div>
+                    <div class="numero n60">60</div>
+                    <div class="numero n80">80</div>
+                    <div class="numero n100">100</div>
+                    <div class="numero n120">120</div>
+                    <div class="numero n140">140</div>
+                    <div class="numero n160">160</div>
+
+                    <!-- AGUJA -->
+
+                    <div class="aguja" id="aguja">
+                    </div>
+
+                    <!-- CENTRO -->
+
+                    <div class="centro"></div>
+
+                    <!-- VELOCIDAD -->
+
+                    <div class="velocidad-digital" id="velocidad">
+
+                        0
+
+                    </div>
+
+                    <div class="kmh">
+
+                        KM/H
+
+                    </div>
+
+                </div>
+
+                <!-- TIEMPO -->
+
+                <div class="info">
+
+                    <h3>TIEMPO</h3>
+
+                    <div class="dato" id="tiempo">
+
+                        00:00
+
+                    </div>
+
+                </div>
+
+                <!-- PUNTAJE -->
+
+                <div class="info">
+
+                    <h3>PUNTAJE</h3>
+
+                    <div class="dato" id="puntaje">
+
+                        0
+
+                    </div>
+
+                </div>
+
+            </footer>
+
+        </section>
+
+        <!-- ===================================
+             PANEL DERECHO
+        ==================================== -->
+
+        <aside class="panel">
+
+            <!-- ALERTA -->
+
+            <h1>
+
+                ¡PRECAUCIÓN!
+
+            </h1>
+
+            <!-- SEÑAL -->
+
+            <img class="senal" src="{{ url_for('static', filename='img/senal_fauna.png') }}">
+
+            <!-- TÍTULO -->
+
+            <h2>
+
+                FAUNA EN LA VÍA
+
+            </h2>
+
+            <!-- TEXTO -->
+
+            <p>
+
+                Conduce con precaución
+                en la vía Corrales.
+                Zona frecuente de fauna
+                silvestre.
+
+            </p>
+
+            <!-- RIESGO -->
+
+            <div class="riesgo">
+
+                Riesgo detectado:
+                Cruce de animales
+                silvestres.
+
+            </div>
+
+            <!-- CONFIGURACIÓN -->
+
+            <div class="opciones-simulador">
+
+                <h2>
+
+                    CONFIGURACIÓN
+
+                </h2>
+
+                <!-- VEHÍCULO -->
+
+                <div class="item-opcion">
+
+                    🚗 Vehículo
+
+                    <span>
+
+                        {{ vehiculo }}
+
+                    </span>
+
+                </div>
+
+                <!-- CARRETERA -->
+
+                <div class="item-opcion">
+
+                    🛣️ Carretera
+
+                    <span>
+
+                        Corrales
+
+                    </span>
+
+                </div>
+
+                <!-- CLIMA -->
+
+                <div class="item-opcion">
+
+                    🌦️ Clima
+
+                    <span>
+
+                        {{ clima }}
+
+                    </span>
+
+                </div>
+
+                <!-- DIFICULTAD -->
+
+                <div class="item-opcion">
+
+                    🎚️ Dificultad
+
+                    <span>
+
+                        {{ dificultad }}
+
+                    </span>
+
+                </div>
+
+            </div>
+
+            <!-- BOTÓN -->
+
+            <button class="btn-finalizar">
+
+                Finalizar
+
+            </button>
+
+        </aside>
+
+    </main>
+
+    <!-- ===================================
+         JAVASCRIPT
+    ==================================== -->
+
+    <script src="{{ url_for('static', filename='js/simulador_corrales.js') }}">
+    </script>
+
+</body>
+
+</html>

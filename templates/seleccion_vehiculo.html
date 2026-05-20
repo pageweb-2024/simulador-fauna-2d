@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet"
+        href="{{ url_for('static', filename='css/seleccion_vehiculo.css') }}">
+
+    <title>Selección de vehículo</title>
+
+</head>
+
+<body>
+
+    <main class="contenedor">
+
+        <h1>SELECCIONAR VEHÍCULO</h1>
+
+        <!-- FORMULARIO -->
+
+        <form action="/guardar_vehiculo" method="POST">
+
+            <div class="vehiculos-grid">
+
+                <!-- ===================================
+                     AUTOMÓVIL
+                ==================================== -->
+
+                <div class="card-vehiculo flotante"
+                    onclick="abrirModal()">
+
+                    <img src="{{ url_for('static', filename='img/automovil.png') }}">
+
+                    <h2>Automóvil</h2>
+
+                </div>
+
+                <!-- ===================================
+                     MOTOCICLETA
+                ==================================== -->
+
+                <label class="card-vehiculo">
+
+                    <input type="radio"
+                        name="vehiculo"
+                        value="motocicleta"
+                        hidden>
+
+                    <img src="{{ url_for('static', filename='img/motocicleta.png') }}">
+
+                    <h2>Motocicleta</h2>
+
+                </label>
+
+                <!-- ===================================
+                     BICICLETA
+                ==================================== -->
+
+                <label class="card-vehiculo">
+
+                    <input type="radio"
+                        name="vehiculo"
+                        value="bicicleta"
+                        hidden>
+
+                    <img src="{{ url_for('static', filename='img/ciclista.png') }}">
+
+                    <h2>Bicicleta</h2>
+
+                </label>
+
+            </div>
+
+            <!-- ===================================
+                 INPUT OCULTO AUTOMÓVIL
+            ==================================== -->
+
+            <input type="hidden"
+                name="vehiculo_auto"
+                id="vehiculoSeleccionado">
+
+            <!-- ===================================
+                 MODAL
+            ==================================== -->
+
+            <div id="modalVehiculo" class="modal">
+
+                <div class="modal-contenido">
+
+                    <h2>Seleccionar tipo</h2>
+
+                    <div class="opciones-modal">
+
+                        <!-- PARTICULAR -->
+
+                        <div class="opcion"
+                            onclick="seleccionarVehiculo('particular')">
+
+                            <img src="{{ url_for('static', filename='img/particular.png') }}">
+
+                            <h3>Particular</h3>
+
+                        </div>
+
+                        <!-- CAMIONETA -->
+
+                        <div class="opcion"
+                            onclick="seleccionarVehiculo('camioneta')">
+
+                            <img src="{{ url_for('static', filename='img/camioneta.png') }}">
+
+                            <h3>Camioneta</h3>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BOTÓN CERRAR -->
+
+                    <button type="button"
+                        class="cerrar"
+                        onclick="cerrarModal()">
+
+                        Cerrar
+
+                    </button>
+
+                </div>
+
+            </div>
+
+            <!-- ===================================
+                 BOTONES
+            ==================================== -->
+
+            <div class="botones">
+
+                <!-- CONTINUAR -->
+
+                <button type="submit"
+                    class="btn-continuar">
+
+                    Continuar
+
+                </button>
+
+                <!-- VOLVER -->
+
+                <button type="button"
+                    class="btn-volver"
+                    onclick="window.location.href='/seleccion_carretera'">
+
+                    Volver
+
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+    <script>
+
+        // ======================================
+        // ABRIR MODAL
+        // ======================================
+
+        function abrirModal() {
+
+            document.getElementById("modalVehiculo").style.display = "flex";
+        }
+
+        // ======================================
+        // CERRAR MODAL
+        // ======================================
+
+        function cerrarModal() {
+
+            document.getElementById("modalVehiculo").style.display = "none";
+        }
+
+        // ======================================
+        // SELECCIONAR AUTO
+        // ======================================
+
+        function seleccionarVehiculo(tipo) {
+
+            document.getElementById("vehiculoSeleccionado").value = tipo;
+
+            cerrarModal();
+        }
+
+        // ======================================
+        // VALIDAR FORMULARIO
+        // ======================================
+
+        document.querySelector("form").addEventListener("submit", function (e) {
+
+            const radioSeleccionado =
+                document.querySelector('input[name="vehiculo"]:checked');
+
+            const autoSeleccionado =
+                document.getElementById("vehiculoSeleccionado").value;
+
+            // SI NO HAY NADA SELECCIONADO
+
+            if (!radioSeleccionado && autoSeleccionado === "") {
+
+                e.preventDefault();
+
+                alert("Selecciona un vehículo");
+            }
+
+            // SI ELIGE AUTOMÓVIL
+
+            if (autoSeleccionado !== "") {
+
+                // ELIMINAR RADIOS
+                document.querySelectorAll('input[name="vehiculo"]')
+                    .forEach(r => r.disabled = true);
+
+                // CREAR INPUT REAL
+                const input = document.createElement("input");
+
+                input.type = "hidden";
+
+                input.name = "vehiculo";
+
+                input.value = autoSeleccionado;
+
+                this.appendChild(input);
+            }
+
+        });
+
+    </script>
+
+</body>
+
+</html>

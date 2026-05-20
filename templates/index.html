@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/index.css')}}">
+    <title>FaunaVial 2D</title>
+</head>
+<body>
+    <main class="inicio">
+        <h1>FaunaVial 2D</h1>
+
+        <p>
+            Simulador interactivo para la sensibilización
+            sobre el cruce de fauna silvestre.
+        </p>
+
+        <div class="botones">
+            <button id="btnIniciar">
+                Iniciar
+            </button>
+
+            <button id="btnInstrucciones">
+                Instrucciones
+            </button>
+        </div>
+    </main>
+
+    <script src="{{ url_for('static', filename='js/index.js') }}"></script>
+</body>
+</html>
