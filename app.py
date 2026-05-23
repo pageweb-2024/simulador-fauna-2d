@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 
 import firebase_admin
 
@@ -114,6 +114,57 @@ def iza():
     )
 
 # =====================================================
+# API TIBASOSA
+# =====================================================
+
+@app.route('/api/tibasosa_animales')
+def api_tibasosa_animales():
+
+    docs = db.collection("Tibasosa").stream()
+
+    animales = []
+
+    for doc in docs:
+
+        animales.append(doc.to_dict())
+
+    return jsonify(animales)
+
+# =====================================================
+# API CORRALES
+# =====================================================
+
+@app.route('/api/corrales_animales')
+def api_corrales_animales():
+
+    docs = db.collection("Corrales").stream()
+
+    animales = []
+
+    for doc in docs:
+
+        animales.append(doc.to_dict())
+
+    return jsonify(animales)
+
+# =====================================================
+# API IZA
+# =====================================================
+
+@app.route('/api/iza_animales')
+def api_iza_animales():
+
+    docs = db.collection("Iza").stream()
+
+    animales = []
+
+    for doc in docs:
+
+        animales.append(doc.to_dict())
+
+    return jsonify(animales)
+
+# =====================================================
 # REGISTRO
 # =====================================================
 
@@ -215,17 +266,13 @@ def guardar_opciones():
     print("Dificultad:", dificultad)
     print("===================================")
 
-    # =================================================
-    # REDIRECCIÓN SEGÚN CARRETERA
-    # =================================================
+    # =========================================
+    # REDIRECCIONES
+    # =========================================
 
     if carretera == "Corrales":
 
         return redirect(url_for('simulador_corrales'))
-
-    elif carretera == "Tibasosa":
-
-        return redirect(url_for('simulador_tibasosa'))
 
     elif carretera == "Iza":
 
@@ -242,39 +289,82 @@ def guardar_opciones():
 @app.route('/simulador_tibasosa')
 def simulador_tibasosa():
 
-    vehiculo = session.get('vehiculo', 'default')
-
+    vehiculo = session.get('vehiculo', 'camioneta')
     clima = session.get('clima', 'Soleado')
-
     dificultad = session.get('dificultad', 'Media')
+
+    # Animales base
+    animales = [
+        {
+            "nombre": "Zorro",
+            "descripcion": "Cruce frecuente en la vía",
+            "imagen": "zorro"
+        },
+        {
+            "nombre": "Venado",
+            "descripcion": "Animal detectado cerca del río",
+            "imagen": "venado"
+        },
+        {
+            "nombre": "Conejo",
+            "descripcion": "Cruce inesperado en carretera",
+            "imagen": "conejo"
+        },
+        {
+            "nombre": "Ardilla",
+            "descripcion": "Paso rápido entre árboles",
+            "imagen": "ardilla"
+        },
+        {
+            "nombre": "Perro",
+            "descripcion": "Animal doméstico en la vía",
+            "imagen": "perro"
+        },
+        {
+            "nombre": "Gato",
+            "descripcion": "Cruce nocturno frecuente",
+            "imagen": "gato"
+        },
+        {
+            "nombre": "Lechuza",
+            "descripcion": "Vuelo bajo cercano",
+            "imagen": "lechuza"
+        },
+        {
+            "nombre": "Caballo",
+            "descripcion": "Animal suelto en carretera",
+            "imagen": "caballo"
+        }
+    ]
+
+    # Cargar animales de Firebase
+    try:
+        docs = db.collection("Tibasosa").stream()
+
+        for doc in docs:
+            datos = doc.to_dict()
+
+            animales.append({
+                "nombre": datos.get("nombre", "Animal"),
+                "descripcion": datos.get("descripcion", "Cruce de fauna"),
+                "imagen": datos.get("imagen", "default")
+            })
+
+    except Exception as e:
+        print("ERROR FIREBASE:", e)
+
+    print("===================================")
+    print("ANIMALES TIBASOSA")
+    print(animales)
+    print("===================================")
 
     return render_template(
         'simulador_tibasosa.html',
         vehiculo=vehiculo,
         carretera="Tibasosa",
         clima=clima,
-        dificultad=dificultad
-    )
-
-# =====================================================
-# SIMULADOR CORRALES
-# =====================================================
-
-@app.route('/simulador_corrales')
-def simulador_corrales():
-
-    vehiculo = session.get('vehiculo', 'default')
-
-    clima = session.get('clima', 'Soleado')
-
-    dificultad = session.get('dificultad', 'Media')
-
-    return render_template(
-        'simulador_corrales.html',
-        vehiculo=vehiculo,
-        carretera="Corrales",
-        clima=clima,
-        dificultad=dificultad
+        dificultad=dificultad,
+        animales=animales
     )
 
 # =====================================================
@@ -284,18 +374,50 @@ def simulador_corrales():
 @app.route('/simulador_iza')
 def simulador_iza():
 
-    vehiculo = session.get('vehiculo', 'default')
+    vehiculo = session.get('vehiculo', 'camioneta')
 
     clima = session.get('clima', 'Soleado')
 
     dificultad = session.get('dificultad', 'Media')
 
+    # =========================================
+    # ANIMALES IZA
+    # =========================================
+
+    docs = db.collection("Iza").stream()
+
+    animales = []
+
+    for doc in docs:
+
+        datos = doc.to_dict()
+
+        animales.append({
+
+            "nombre": datos.get("nombre", "Animal"),
+            "descripcion": datos.get("descripcion", "Cruce de fauna"),
+            "imagen": datos.get("imagen", "default.png")
+
+        })
+
+    print("===================================")
+    print("ANIMALES IZA")
+    print(animales)
+    print("===================================")
+
     return render_template(
+
         'simulador_iza.html',
+
         vehiculo=vehiculo,
+
         carretera="Iza",
+
         clima=clima,
-        dificultad=dificultad
+
+        dificultad=dificultad,
+
+        animales=animales
     )
 
 # =====================================================
@@ -304,4 +426,8 @@ def simulador_iza():
 
 if __name__ == '__main__':
 
-    app.run(debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=10000,
+        debug=True
+    )

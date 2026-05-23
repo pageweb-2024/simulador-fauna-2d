@@ -5,465 +5,356 @@
 }
 
 body{
+    font-family:Arial,sans-serif;
+    background:#0f172a;
     overflow:hidden;
-    font-family:Arial, Helvetica, sans-serif;
-    background:#101010;
+    color:white;
 }
 
-/* ===================================
-   CONTENEDOR
-=================================== */
-
+/* ==========================
+   CONTENEDOR PRINCIPAL
+========================== */
 .simulador{
-    width:100%;
-    height:100vh;
-    display:flex;
-}
-
-/* ===================================
-   CARRETERA
-=================================== */
-
-.carretera{
-    width:75%;
-    height:100vh;
     position:relative;
+    width:100vw;
+    height:100vh;
     overflow:hidden;
-    background:#222;
 }
 
-/* ===================================
-   MAPA
-=================================== */
+/* ==========================
+   CARRETERA / MAPA
+========================== */
+.carretera{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    background:#111827;
+}
 
 .mapa-container{
+    position:absolute;
+    inset:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    position:relative;
 }
 
 .fondo{
     width:100%;
-    height:120%;
-
-    position:absolute;
-
-    top:-10%;
-    left:0;
-
-    object-fit:cover;
-
-    will-change:transform;
+    height:100%;
+    object-fit:fill;
+    display:block;
 }
 
-/* ===================================
+/* ==========================
    VEHÍCULO
-=================================== */
-
-#vehiculo{
-    width:7vw;
-
-    min-width:70px;
-    max-width:140px;
-
+========================== */
+.vehiculo{
     position:absolute;
-
-    left:37%;
-    top:70%;
-
-    z-index:100;
-
-    transform:
-    translate(-50%, -50%);
-
-    transition:
-    width 0.2s linear;
+    width:90px;
+    z-index:50;
+    transition:all .15s ease;
+    filter:drop-shadow(0 0 12px rgba(0,0,0,.7));
 }
 
-/* ===================================
-   PANEL DERECHO
-=================================== */
-
-.panel{
-    width:25%;
-    background:#f5f5f5;
-
-    padding:20px;
-
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-
-    border-left:4px solid #111;
+/* ==========================
+   ANIMAL MOVIMIENTO
+========================== */
+.animal-movimiento{
+    position:absolute;
+    width:70px;
+    z-index:45;
+    display:none;
 }
 
-.panel h1{
-    width:100%;
-
-    background:#ff1b1b;
-    color:white;
-
-    text-align:center;
-
-    padding:15px;
-
-    border-radius:15px;
-
-    font-size:32px;
-}
-
-.senal{
-    width:180px;
-    margin-top:25px;
-}
-
-.panel h2{
-    color:#ff1b1b;
-    margin-top:20px;
-    font-size:28px;
-}
-
-.panel p{
-    margin-top:20px;
-
-    text-align:center;
-
-    font-size:18px;
-
-    line-height:1.5;
-}
-
-.riesgo{
-    margin-top:25px;
-
-    width:100%;
-
-    background:#ffe5e5;
-
-    padding:15px;
-
-    border-radius:15px;
-
-    color:darkred;
-
-    text-align:center;
-
-    font-weight:bold;
-}
-
-/* ===================================
-   CONFIGURACIONES
-=================================== */
-
-.opciones-simulador{
-
-    width:100%;
-
-    margin-top:20px;
-
-    background:#181818;
-
-    border-radius:15px;
-
-    padding:15px;
-
-    display:flex;
-    flex-direction:column;
-
-    gap:12px;
-
-    border:2px solid #333;
-}
-
-.opciones-simulador h2{
-
-    text-align:center;
-
-    color:lime;
-
-    font-size:22px;
-}
-
-.item-opcion{
-
-    background:#262626;
-
-    padding:12px;
-
-    border-radius:10px;
-
-    color:white;
-
-    font-size:15px;
+/* ==========================
+   HUD
+========================== */
+.hud{
+    position:absolute;
+    bottom:20px;
+    left:20px;
+    right:20px;
 
     display:flex;
     justify-content:space-between;
-    align-items:center;
+    align-items:flex-end;
+
+    z-index:100;
 }
 
-.item-opcion span{
-
-    color:lime;
-
-    font-weight:bold;
-}
-
-/* ===================================
-   BOTÓN
-=================================== */
-
-.btn-finalizar{
-
-    margin-top:auto;
-
-    width:100%;
-
-    padding:16px;
-
-    border:none;
-
-    background:#ff1b1b;
-
-    color:white;
-
-    font-size:22px;
-
-    border-radius:15px;
-
-    cursor:pointer;
-
-    transition:0.2s;
-}
-
-.btn-finalizar:hover{
-
-    background:#d40000;
-}
-
-/* ===================================
-   HUD
-=================================== */
-
-.hud{
-
-    position:absolute;
-
-    bottom:0;
-    left:0;
-
-    width:100%;
-    height:160px;
-
-    background:
-    linear-gradient(
-        to top,
-        rgba(0,0,0,0.96),
-        rgba(0,0,0,0.78)
-    );
-
-    display:flex;
-    justify-content:space-evenly;
-    align-items:center;
-
-    z-index:200;
-
-    border-top:3px solid #1d1d1d;
-}
-
-/* ===================================
+/* ==========================
    TACÓMETRO
-=================================== */
-
+========================== */
 .tacometro{
-
-    width:210px;
-    height:210px;
-
+    position:relative;
+    width:280px;
+    height:280px;
     border-radius:50%;
 
-    position:relative;
-
-    background:
-    radial-gradient(circle, #111 35%, #000 100%);
-
-    border:10px solid #1f1f1f;
+    background:radial-gradient(circle,#0a0a0a 35%,#000 100%);
+    border:12px solid #374151;
 
     box-shadow:
-    0 0 20px rgba(0,255,0,0.2),
-    inset 0 0 25px rgba(255,255,255,0.08);
+        inset 0 0 35px #000,
+        0 0 25px rgba(0,0,0,.7);
 }
-
-/* AGUJA */
-
-.aguja{
-
-    width:6px;
-    height:85px;
-
-    background:red;
-
-    position:absolute;
-
-    bottom:50%;
-    left:50%;
-
-    transform:
-    translateX(-50%)
-    rotate(-130deg);
-
-    transform-origin:bottom center;
-
-    border-radius:10px;
-
-    z-index:50;
-
-    box-shadow:0 0 10px red;
-}
-
-/* CENTRO */
-
-.centro{
-
-    width:22px;
-    height:22px;
-
-    background:white;
-
-    border-radius:50%;
-
-    position:absolute;
-
-    top:50%;
-    left:50%;
-
-    transform:translate(-50%, -50%);
-
-    z-index:60;
-}
-
-/* NÚMEROS */
 
 .numero{
-
     position:absolute;
-
-    color:white;
-
-    font-size:15px;
-
+    color:#fff;
+    font-size:18px;
     font-weight:bold;
 }
 
-.n0{ top:155px; left:28px; }
+.n0   {bottom:25px;left:38px;}
+.n20  {bottom:90px;left:15px;}
+.n40  {bottom:160px;left:35px;}
+.n60  {top:35px;left:82px;}
+.n80  {top:12px;left:125px;}
+.n100 {top:35px;right:80px;}
+.n120 {bottom:160px;right:35px;}
+.n140 {bottom:90px;right:15px;}
+.n160 {bottom:25px;right:35px;}
 
-.n20{ top:110px; left:15px; }
+.aguja{
+    position:absolute;
+    width:6px;
+    height:110px;
+    background:red;
 
-.n40{ top:65px; left:38px; }
+    left:50%;
+    bottom:50%;
 
-.n60{ top:28px; left:82px; }
+    transform-origin:bottom center;
+    transform:translateX(-50%) rotate(-130deg);
 
-.n80{ top:15px; left:135px; }
+    border-radius:10px;
+    box-shadow:0 0 12px red;
 
-.n100{ top:30px; right:35px; }
+    transition:transform .15s linear;
+}
 
-.n120{ top:70px; right:10px; }
+.centro{
+    position:absolute;
+    width:30px;
+    height:30px;
+    background:#ef4444;
+    border-radius:50%;
 
-.n140{ top:120px; right:8px; }
+    left:50%;
+    bottom:50%;
 
-.n160{ top:160px; right:28px; }
-
-/* VELOCIDAD */
+    transform:translate(-50%,50%);
+    z-index:10;
+}
 
 .velocidad-digital{
-
     position:absolute;
-
-    bottom:48px;
+    bottom:72px;
     left:50%;
 
     transform:translateX(-50%);
 
-    font-size:34px;
-
-    color:lime;
-
+    font-size:50px;
     font-weight:bold;
+    color:#22c55e;
 
-    text-shadow:0 0 10px lime;
+    text-shadow:0 0 10px #22c55e;
 }
 
 .kmh{
-
     position:absolute;
-
-    bottom:24px;
+    bottom:42px;
     left:50%;
 
     transform:translateX(-50%);
-
-    color:#ccc;
-
-    font-size:12px;
-
-    letter-spacing:2px;
-}
-
-/* ===================================
-   INFO
-=================================== */
-
-.info{
-    text-align:center;
-}
-
-.info h3{
-
-    color:#aaa;
-
-    margin-bottom:10px;
-
+    color:#9ca3af;
     font-size:18px;
 }
 
-.dato{
+/* ==========================
+   INFO
+========================== */
+.info{
+    background:rgba(17,24,39,.88);
 
-    font-size:34px;
+    padding:25px;
+    border-radius:18px;
+    min-width:220px;
 
-    font-weight:bold;
+    text-align:center;
 
-    color:white;
+    border:2px solid #374151;
+
+    backdrop-filter:blur(8px);
+
+    box-shadow:0 0 18px rgba(0,0,0,.45);
 }
 
-/* ===================================
-   RESPONSIVE
-=================================== */
+.info h3{
+    color:#60a5fa;
+    margin-bottom:12px;
+    font-size:20px;
+}
 
-@media(max-width:1100px){
+.dato{
+    font-size:42px;
+    font-weight:bold;
+}
 
-    .simulador{
-        flex-direction:column;
-    }
+/* ==========================
+   PANEL ALERTA DERECHA
+========================== */
+.panel{
+    position:absolute;
+    top:20px;
+    right:20px;
 
-    .carretera{
-        width:100%;
-        height:70vh;
-    }
+    width:360px;
+    height:calc(100vh - 40px);
 
-    .panel{
-        width:100%;
-        height:30vh;
-    }
+    background:rgba(255,255,255,.97);
+    color:#111827;
 
-    .hud{
-        flex-wrap:wrap;
-        height:auto;
-        padding:20px;
-        gap:20px;
-    }
+    padding:25px;
 
-    .tacometro{
-        width:180px;
-        height:180px;
-    }
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+
+    overflow-y:auto;
+
+    border-radius:20px;
+
+    box-shadow:0 20px 50px rgba(0,0,0,.35);
+
+    z-index:9999;
+
+    transition:all .35s ease;
+}
+
+/* oculto */
+.oculto{
+    opacity:0;
+    transform:translateX(420px);
+    pointer-events:none;
+}
+
+/* visible */
+.visible{
+    opacity:1;
+    transform:translateX(0);
+}
+
+.panel h1{
+    color:#dc2626;
+    font-size:30px;
+    text-align:center;
+}
+
+.panel h2{
+    text-align:center;
+}
+
+.panel p{
+    text-align:center;
+    font-size:16px;
+}
+
+/* ==========================
+   SEÑAL
+========================== */
+.senal{
+    width:120px;
+    margin:auto;
+}
+
+/* ==========================
+   RIESGO
+========================== */
+.riesgo{
+    background:#fee2e2;
+    color:#dc2626;
+    padding:12px;
+    border-radius:12px;
+    font-weight:bold;
+    text-align:center;
+}
+
+/* ==========================
+   ANIMAL ALERTA
+========================== */
+.animal-alerta{
+    display:flex;
+    justify-content:center;
+}
+
+.animal-circulo{
+    width:150px;
+    height:150px;
+
+    border-radius:50%;
+
+    background:#f3f4f6;
+
+    display:flex;
+    justify-content:center;
+    align-items:center;
+
+    border:4px solid #d1d5db;
+}
+
+.animal-img{
+    width:110px;
+    height:110px;
+    object-fit:contain;
+}
+
+/* ==========================
+   OPCIONES
+========================== */
+.opciones-simulador h2{
+    color:#2563eb;
+    margin-bottom:15px;
+}
+
+.item-opcion{
+    display:flex;
+    justify-content:space-between;
+
+    padding:12px;
+    margin-bottom:10px;
+
+    background:#f3f4f6;
+    border-radius:10px;
+
+    font-weight:bold;
+}
+
+/* ==========================
+   BOTÓN FINALIZAR
+========================== */
+.btn-finalizar{
+    margin-top:auto;
+
+    padding:18px;
+
+    border:none;
+    border-radius:14px;
+
+    background:#dc2626;
+    color:white;
+
+    font-size:20px;
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.3s;
+}
+
+.btn-finalizar:hover{
+    background:#b91c1c;
+    transform:scale(1.05);
 }

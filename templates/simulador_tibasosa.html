@@ -2,266 +2,161 @@
 <html lang="es">
 
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Simulador Tibasosa</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_tibasosa.css') }}">
-
 </head>
 
 <body>
 
-    <!-- ===================================
-         CONTENEDOR PRINCIPAL
-    ==================================== -->
+<main class="simulador">
 
-    <main class="simulador">
+    <!-- CARRETERA -->
+    <section class="carretera">
 
-        <!-- ===================================
-             ZONA CARRETERA
-        ==================================== -->
+        <!-- MAPA -->
+        <div class="mapa-container">
+            <img
+                id="mapa"
+                class="fondo"
+                src="{{ url_for('static', filename='img/Sogamoso_tibasosa.png') }}"
+                alt="Mapa Tibasosa">
+        </div>
 
-        <section class="carretera">
+        <!-- ANIMAL EN MOVIMIENTO -->
+        <img
+            id="animalMovimiento"
+            class="animal-movimiento"
+            src=""
+            alt="Animal">
 
-            <!-- ===================================
-                 MAPA TIBASOSA
-            ==================================== -->
+        <!-- VEHÍCULO -->
+        <img
+            id="vehiculo"
+            class="vehiculo"
+            src="{{ url_for('static', filename='img/' ~ vehiculo ~ '.png') }}"
+            alt="Vehículo">
 
-            <div class="mapa-container">
+        <!-- HUD -->
+        <footer class="hud">
 
-                <img id="mapa" class="fondo" src="{{ url_for('static', filename='img/Sogamoso_tibasosa.png') }}">
+            <!-- TACÓMETRO -->
+            <div class="tacometro">
 
-            </div>
+                <div class="numero n0">0</div>
+                <div class="numero n20">20</div>
+                <div class="numero n40">40</div>
+                <div class="numero n60">60</div>
+                <div class="numero n80">80</div>
+                <div class="numero n100">100</div>
+                <div class="numero n120">120</div>
+                <div class="numero n140">140</div>
+                <div class="numero n160">160</div>
 
-            <!-- ===================================
-                 VEHÍCULO
-            ==================================== -->
+                <div class="aguja" id="aguja"></div>
+                <div class="centro"></div>
 
-            <img id="vehiculo" class="vehiculo" src="{{ url_for('static', filename='img/camioneta.png') }}">
-
-            <!-- ===================================
-                 HUD
-            ==================================== -->
-
-            <footer class="hud">
-
-                <!-- ===================================
-                     TACÓMETRO
-                ==================================== -->
-
-                <div class="tacometro">
-
-                    <!-- NÚMEROS -->
-
-                    <div class="numero n0">0</div>
-                    <div class="numero n20">20</div>
-                    <div class="numero n40">40</div>
-                    <div class="numero n60">60</div>
-                    <div class="numero n80">80</div>
-                    <div class="numero n100">100</div>
-                    <div class="numero n120">120</div>
-                    <div class="numero n140">140</div>
-                    <div class="numero n160">160</div>
-
-                    <!-- AGUJA -->
-
-                    <div class="aguja" id="aguja"></div>
-
-                    <!-- CENTRO -->
-
-                    <div class="centro"></div>
-
-                    <!-- VELOCIDAD -->
-
-                    <div class="velocidad-digital" id="velocidad">
-
-                        0
-
-                    </div>
-
-                    <!-- KM/H -->
-
-                    <div class="kmh">
-
-                        KM/H
-
-                    </div>
-
-                </div>
-
-                <!-- ===================================
-                     TIEMPO
-                ==================================== -->
-
-                <div class="info">
-
-                    <h3>TIEMPO</h3>
-
-                    <div class="dato" id="tiempo">
-
-                        00:00
-
-                    </div>
-
-                </div>
-
-                <!-- ===================================
-                     PUNTAJE
-                ==================================== -->
-
-                <div class="info">
-
-                    <h3>PUNTAJE</h3>
-
-                    <div class="dato" id="puntaje">
-
-                        0
-
-                    </div>
-
-                </div>
-
-            </footer>
-
-        </section>
-
-        <!-- ===================================
-             PANEL DERECHO
-        ==================================== -->
-
-        <aside class="panel">
-
-            <!-- TÍTULO -->
-
-            <h1>
-
-                ¡PRECAUCIÓN!
-
-            </h1>
-
-            <!-- SEÑAL -->
-
-            <img class="senal" src="{{ url_for('static', filename='img/senal_fauna.png') }}">
-
-            <!-- TEXTO -->
-
-            <h2>
-
-                FAUNA EN LA VÍA
-
-            </h2>
-
-            <p>
-
-                Reduce la velocidad
-                y mantente alerta.
-
-            </p>
-
-            <!-- RIESGO -->
-
-            <div class="riesgo">
-
-                Riesgo detectado:
-                Cruce de fauna silvestre
+                <div class="velocidad-digital" id="velocidad">0</div>
+                <div class="kmh">KM/H</div>
 
             </div>
 
-            <!-- ===================================
-                 CONFIGURACIÓN
-            ==================================== -->
+            <!-- TIEMPO -->
+            <div class="info">
+                <h3>TIEMPO</h3>
+                <div class="dato" id="tiempo">15:00</div>
+            </div>
 
-            <div class="opciones-simulador">
+            <!-- PUNTAJE -->
+            <div class="info">
+                <h3>PUNTAJE</h3>
+                <div class="dato" id="puntaje">0</div>
+            </div>
 
-                <h2>
+        </footer>
 
-                    CONFIGURACIÓN
+    </section>
 
-                </h2>
+    <!-- PANEL ALERTA -->
+    <aside id="panelAlerta" class="panel oculto">
 
-                <!-- VEHÍCULO -->
+        <h1>⚠ ¡PRECAUCIÓN!</h1>
 
-                <div class="item-opcion">
+        <img
+            class="senal"
+            src="{{ url_for('static', filename='img/senal_fauna.png') }}"
+            alt="Señal fauna">
 
-                    🚗 Vehículo
+        <h2 id="animalNombre">FAUNA EN LA VÍA</h2>
 
-                    <span>
+        <p id="animalDescripcion">
+            Reduce la velocidad
+        </p>
 
-                        Camioneta
+        <div id="riesgoTexto" class="riesgo">
+            Riesgo detectado
+        </div>
 
-                    </span>
+        <!-- Animal detectado -->
+        <div class="animal-alerta">
 
-                </div>
+            <div class="animal-card">
 
-                <!-- CARRETERA -->
-
-                <div class="item-opcion">
-
-                    🛣️ Carretera
-
-                    <span>
-
-                        Tibasosa
-
-                    </span>
-
-                </div>
-
-                <!-- CLIMA -->
-
-                <div class="item-opcion">
-
-                    🌦️ Clima
-
-                    <span>
-
-                        Soleado
-
-                    </span>
-
-                </div>
-
-                <!-- DIFICULTAD -->
-
-                <div class="item-opcion">
-
-                    🎚️ Dificultad
-
-                    <span>
-
-                        Difícil
-
-                    </span>
-
+                <div class="animal-circulo">
+                    <img
+                        id="animalPanel"
+                        class="animal-img"
+                        src=""
+                        alt="Animal">
                 </div>
 
             </div>
 
-            <!-- ===================================
-                 BOTÓN
-            ==================================== -->
+        </div>
 
-            <button class="btn-finalizar">
+        <!-- CONFIGURACIÓN -->
+        <div class="opciones-simulador">
 
-                Finalizar
+            <h2>CONFIGURACIÓN</h2>
 
-            </button>
+            <div class="item-opcion">
+                🚗 Vehículo
+                <span>{{ vehiculo }}</span>
+            </div>
 
-        </aside>
+            <div class="item-opcion">
+                🛣️ Carretera
+                <span>{{ carretera }}</span>
+            </div>
 
-    </main>
+            <div class="item-opcion">
+                🌦️ Clima
+                <span>{{ clima }}</span>
+            </div>
 
-    <!-- ===================================
-         JAVASCRIPT
-    ==================================== -->
+            <div class="item-opcion">
+                🎚️ Dificultad
+                <span>{{ dificultad }}</span>
+            </div>
 
-    <script src="{{ url_for('static', filename='js/simulador_tibasosa.js') }}">
-    </script>
+        </div>
+
+        <button class="btn-finalizar">
+            Finalizar
+        </button>
+
+    </aside>
+
+</main>
+
+<!-- PASAR ANIMALES DESDE FLASK -->
+<script>
+    const animalesFirebase = JSON.parse('{{ animales|tojson|safe }}');
+</script>
+
+<script src="{{ url_for('static', filename='js/simulador_tibasosa.js') }}"></script>
 
 </body>
-
 </html>
