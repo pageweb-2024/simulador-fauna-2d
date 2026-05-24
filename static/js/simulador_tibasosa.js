@@ -10,17 +10,32 @@ const animalNombre = document.getElementById("animalNombre");
 const animalDescripcion = document.getElementById("animalDescripcion");
 const animalPanel = document.getElementById("animalPanel");
 
+const colisionPanel = document.getElementById("colisionPanel");
+const colisionTexto = document.getElementById("colisionTexto");
+const opcion1 = document.getElementById("opcion1");
+const opcion2 = document.getElementById("opcion2");
+
+const animal = document.getElementById("animalMovimiento");
+
 panel.classList.add("oculto");
+colisionPanel.classList.add("oculto");
+
+/* ===========================
+   ESTADO
+=========================== */
+
+let juegoPausado = false;
 
 /* ===========================
    ANIMAL
 =========================== */
 
-const animal = document.getElementById("animalMovimiento");
-
-let animalX = -120;
+let animalX = 0;
+let animalY = 0;
+let animalDX = 0;
+let animalDY = 0;
 let animalActivo = false;
-let velocidadAnimal = 3;
+let velocidadAnimal = 4;
 
 /* ===========================
    VEHÍCULO
@@ -34,9 +49,6 @@ const limiteDerecho = window.innerWidth * 0.61;
 
 let velocidad = 0;
 let aceleracion = 0;
-let giro = 0;
-let angulo = 0;
-
 let mapaY = -100;
 
 /* ===========================
@@ -45,18 +57,22 @@ let mapaY = -100;
 
 const velocidadMax = 160;
 const fuerzaMotor = 0.35;
-const fuerzaFreno = 0.45;
+const fuerzaFreno = 1.5;
 const friccion = 0.05;
 const sensibilidadGiro = 0.05;
 
 /* ===========================
-   TIEMPO
+   TIEMPO / PUNTAJE
 =========================== */
 
-let tiempoTotal = 900; // 15:00
+let tiempoTotal = 600;
 let puntaje = 0;
 
 const teclas = {};
+
+/* ===========================
+   TECLAS
+=========================== */
 
 document.addEventListener("keydown", e => {
     teclas[e.key.toLowerCase()] = true;
@@ -70,18 +86,20 @@ document.addEventListener("keyup", e => {
    TIEMPO
 =========================== */
 
-function actualizarTiempo(){
+function actualizarTiempo() {
 
-    if(tiempoTotal <= 0){
+    if (juegoPausado) return;
+
+    if (tiempoTotal <= 0) {
         finalizarSimulacion();
         return;
     }
 
-    let minutos = Math.floor(tiempoTotal / 60);
-    let segundos = tiempoTotal % 60;
+    let m = Math.floor(tiempoTotal / 60);
+    let s = tiempoTotal % 60;
 
     tiempoTexto.innerText =
-        `${String(minutos).padStart(2,"0")}:${String(segundos).padStart(2,"0")}`;
+        `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
 
     tiempoTotal--;
 }
@@ -90,182 +108,253 @@ function actualizarTiempo(){
    PUNTAJE
 =========================== */
 
-function actualizarPuntaje(){
-
-    if(velocidad > 40 && velocidad < 100){
-        puntaje += 2;
-    }
-
-    if(velocidad > 140){
-        puntaje -= 1;
-    }
-
-    if(puntaje < 0){
-        puntaje = 0;
-    }
-
+function actualizarPuntaje() {
     puntajeTexto.innerText = puntaje;
 }
 
 /* ===========================
-   ANIMALES
+   GENERAR ANIMAL
 =========================== */
 
-function generarAnimal(){
+function generarAnimal() {
 
-    if(animalActivo || !animalesFirebase.length) return;
+    if (juegoPausado) return;
+    if (animalActivo) return;
+    if (!animalesFirebase.length) return;
 
     animalActivo = true;
-    animalX = -120;
 
-    const animalRandom =
-        animalesFirebase[
-            Math.floor(Math.random() * animalesFirebase.length)
-        ];
+    const a = animalesFirebase[
+        Math.floor(Math.random() * animalesFirebase.length)
+    ];
 
-    animal.src = `/static/img/${animalRandom.imagen}.png`;
-    animalPanel.src = `/static/img/${animalRandom.imagen}.png`;
+    animal.src = `/static/img/${a.imagen}.png`;
+    animalPanel.src = `/static/img/${a.imagen}.png`;
 
-    animalNombre.innerText = animalRandom.nombre;
-    animalDescripcion.innerText = animalRandom.descripcion;
+    animalNombre.innerText = a.nombre;
+    animalDescripcion.innerText = a.descripcion;
 
     animal.style.display = "block";
 
-    const posiciones = ["40%","45%","50%","55%"];
+    const lado = Math.floor(Math.random() * 4);
 
-    animal.style.top =
-        posiciones[Math.floor(Math.random() * posiciones.length)];
+    switch (lado) {
+
+        case 0: // potrero izquierdo
+            animalX = window.innerWidth * 0.15;
+            animalY = window.innerHeight * (0.25 + Math.random() * 0.5);
+            animalDX = velocidadAnimal;
+            animalDY = (Math.random() - 0.5) * 2;
+            break;
+
+        case 1: // potrero derecho
+            animalX = window.innerWidth * 0.85;
+            animalY = window.innerHeight * (0.25 + Math.random() * 0.5);
+            animalDX = -velocidadAnimal;
+            animalDY = (Math.random() - 0.5) * 2;
+            break;
+
+        case 2: // diagonal izquierda
+            animalX = window.innerWidth * 0.20;
+            animalY = window.innerHeight * 0.15;
+            animalDX = velocidadAnimal;
+            animalDY = velocidadAnimal * 0.5;
+            break;
+
+        case 3: // diagonal derecha
+            animalX = window.innerWidth * 0.80;
+            animalY = window.innerHeight * 0.15;
+            animalDX = -velocidadAnimal;
+            animalDY = velocidadAnimal * 0.5;
+            break;
+    }
+
+    animal.style.left = animalX + "px";
+    animal.style.top = animalY + "px";
 
     panel.classList.remove("oculto");
     panel.classList.add("visible");
 }
 
-function moverAnimal(){
+/* ===========================
+   MOVER ANIMAL
+=========================== */
 
-    if(!animalActivo) return;
+function moverAnimal() {
 
-    animalX += velocidadAnimal;
+    if (juegoPausado || !animalActivo) return;
+
+    animalX += animalDX;
+    animalY += animalDY;
+
     animal.style.left = animalX + "px";
+    animal.style.top = animalY + "px";
 
-    if(animalX > window.innerWidth){
-
+    if (
+        animalX < -150 ||
+        animalX > window.innerWidth + 150 ||
+        animalY < -150 ||
+        animalY > window.innerHeight + 150
+    ) {
         animalActivo = false;
         animal.style.display = "none";
 
-        panel.classList.remove("visible");
         panel.classList.add("oculto");
+        panel.classList.remove("visible");
     }
 }
 
 /* ===========================
-   FINALIZAR
+   DETECTAR COLISIÓN
 =========================== */
 
-function finalizarSimulacion(){
+function detectarColision() {
 
-    alert("SIMULACIÓN FINALIZADA\nPUNTAJE: " + puntaje);
+    if (juegoPausado || !animalActivo) return;
+
+    let r1 = vehiculo.getBoundingClientRect();
+    let r2 = animal.getBoundingClientRect();
+
+    let choque = !(
+        r1.right < r2.left ||
+        r1.left > r2.right ||
+        r1.bottom < r2.top ||
+        r1.top > r2.bottom
+    );
+
+    if (choque) {
+
+        if (velocidad <= 20) {
+            return;
+        }
+
+        animalActivo = false;
+        animal.style.display = "none";
+        mostrarColision();
+    }
+}
+
+/* ===========================
+   COLISIÓN
+=========================== */
+
+function mostrarColision() {
+
+    juegoPausado = true;
+
+    colisionTexto.innerText =
+        "Atropellaste un animal. ¿Qué haces?";
+
+    opcion1.innerText = "Ayudar (+10)";
+    opcion2.innerText = "Huir (-20)";
+
+    colisionPanel.classList.remove("oculto");
+
+    opcion1.onclick = () => {
+        puntaje += 10;
+        cerrarColision();
+    };
+
+    opcion2.onclick = () => {
+        puntaje -= 20;
+        cerrarColision();
+    };
+}
+
+function cerrarColision() {
+
+    colisionPanel.classList.add("oculto");
+
+    panel.classList.remove("visible");
+    panel.classList.add("oculto");
+
+    if (puntaje < 0) puntaje = 0;
+
+    actualizarPuntaje();
+    juegoPausado = false;
+}
+
+/* ===========================
+   FINAL
+=========================== */
+
+function finalizarSimulacion() {
+
+    alert("SIMULACIÓN FINALIZADA\n\nPUNTAJE: " + puntaje);
     location.reload();
 }
 
 /* ===========================
-   LOOP
+   LOOP PRINCIPAL
 =========================== */
 
-function actualizar(){
+function actualizar() {
 
-    if(teclas["w"]){
-        aceleracion += fuerzaMotor;
-    }
+    requestAnimationFrame(actualizar);
 
-    if(teclas["s"] && velocidad > 0){
-        aceleracion -= fuerzaFreno * 1.8;
-    }
+    if (juegoPausado) return;
 
-    if(!teclas["w"] && !teclas["s"] && velocidad > 0){
+    if (teclas["w"]) aceleracion += fuerzaMotor;
+
+    if (teclas["s"] && velocidad > 0)
+        aceleracion -= fuerzaFreno;
+
+    if (!teclas["w"] && !teclas["s"] && velocidad > 0)
         aceleracion -= friccion;
-    }
 
     velocidad += aceleracion;
 
-    if(velocidad > velocidadMax){
-        velocidad = velocidadMax;
-    }
-
-    if(velocidad < 0){
-        velocidad = 0;
-    }
+    if (velocidad > velocidadMax) velocidad = velocidadMax;
+    if (velocidad < 0) velocidad = 0;
 
     aceleracion = 0;
 
-    /* mover izquierda */
-    if(teclas["a"]){
-        x -= 3 + (velocidad * sensibilidadGiro);
-        giro = -18;
+    let direccion = 0;
+
+    if (teclas["a"]) direccion = -1;
+    if (teclas["d"]) direccion = 1;
+
+    x += direccion * (3 + velocidad * sensibilidadGiro);
+
+    let angulo = direccion * (10 + velocidad * 0.08);
+
+    let inclinacionFreno = 0;
+
+    if (teclas["s"] && velocidad > 0) {
+        inclinacionFreno = -6;
     }
 
-    /* mover derecha */
-    if(teclas["d"]){
-        x += 3 + (velocidad * sensibilidadGiro);
-        giro = 18;
-    }
+    vehiculo.style.transform =
+        `translate(-50%, -50%) rotate(${angulo}deg) skewY(${inclinacionFreno}deg)`;
 
-    /* limitar carretera */
-    if(x < limiteIzquierdo){
-        x = limiteIzquierdo;
-    }
-
-    if(x > limiteDerecho){
-        x = limiteDerecho;
-    }
-
-    if(!teclas["a"] && !teclas["d"]){
-        giro *= 0.85;
-    }
-
-    angulo += (giro - angulo) * 0.1;
+    if (x < limiteIzquierdo) x = limiteIzquierdo;
+    if (x > limiteDerecho) x = limiteDerecho;
 
     vehiculo.style.left = x + "px";
     vehiculo.style.top = y + "px";
 
-    vehiculo.style.transform =
-        `translate(-50%, -50%) rotate(${angulo}deg)`;
-
     mapaY += velocidad * 0.12;
-
     mapa.style.transform = `translateY(${mapaY}px)`;
 
-    if(mapaY >= 0){
-        mapaY = -100;
-    }
+    if (mapaY >= 0) mapaY = -100;
 
     velocidadTexto.innerText = Math.floor(velocidad);
 
-    let rotacionAguja =
-        -130 + (velocidad / velocidadMax) * 260;
-
     aguja.style.transform =
-        `translateX(-50%) rotate(${rotacionAguja}deg)`;
+        `translateX(-50%) rotate(${-130 + (velocidad / velocidadMax) * 260}deg)`;
 
     moverAnimal();
-
-    requestAnimationFrame(actualizar);
+    detectarColision();
 }
-
-/* ===========================
-   BOTÓN FINALIZAR
-=========================== */
-
-document.querySelector(".btn-finalizar")
-.addEventListener("click", finalizarSimulacion);
 
 /* ===========================
    INICIO
 =========================== */
 
 actualizarTiempo();
+actualizarPuntaje();
 
 setInterval(generarAnimal, 8000);
 setInterval(actualizarTiempo, 1000);
-setInterval(actualizarPuntaje, 1000);
 
 actualizar();
