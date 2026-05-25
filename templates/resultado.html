@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados del Simulador</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/resultado.css') }}">
+</head>
+
+<body>
+
+    <div class="contenedor">
+
+        <h1>RESULTADOS DEL SIMULADOR</h1>
+
+        <div class="panel-resultados">
+
+            <div class="dato">
+                <span>Carretera</span>
+                <strong>{{ session.get('carretera') }}</strong>
+            </div>
+
+            <div class="dato">
+                <span>Vehículo</span>
+                <strong>{{ session.get('vehiculo') }}</strong>
+            </div>
+
+            <div class="dato">
+                <span>Clima</span>
+                <strong>{{ session.get('clima') }}</strong>
+            </div>
+
+            <div class="dato">
+                <span>Dificultad</span>
+                <strong>{{ session.get('dificultad') }}</strong>
+            </div>
+
+            <div class="dato">
+                <span>Puntaje</span>
+                <strong>{{ session.get('puntaje') }}</strong>
+            </div>
+
+            <div class="dato">
+                <span>Tiempo</span>
+                <strong>{{ session.get('tiempo') }}</strong>
+            </div>
+
+            <div class="dato">
+                <span>Velocidad Máxima</span>
+                <strong>{{ session.get('velocidad') }} km/h</strong>
+            </div>
+
+            <div class="dato">
+                <span>Animales Esquivados</span>
+                <strong>{{ session.get('animales') }}</strong>
+            </div>
+
+        </div>
+
+        <div class="formatos">
+
+            <a href="/descargar_excel" class="btn excel">
+                📊 Descargar Excel
+            </a>
+
+            <a href="/descargar_word" class="btn word">
+                📄 Descargar Word
+            </a>
+
+        </div>
+
+        <button id="reiniciar">VOLVER AL INICIO</button>
+
+    </div>
+
+    <script src="{{ url_for('static', filename='js/resultado.js') }}"></script>
+</body>
+
+</html>

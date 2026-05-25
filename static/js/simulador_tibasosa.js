@@ -347,6 +347,10 @@ function actualizar() {
     detectarColision();
 }
 
+document.getElementById("finalizar").addEventListener("click", function () {
+    window.location.href = "/resultado";
+});
+
 /* ===========================
    INICIO
 =========================== */

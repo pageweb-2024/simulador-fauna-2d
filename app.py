@@ -1,9 +1,9 @@
-from flask import Flask, render_template, request, session, redirect, url_for, jsonify
-
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify, send_file
 import firebase_admin
-
 from firebase_admin import credentials, firestore
-
+from docx import Document
+from openpyxl import Workbook
+import io
 # =====================================================
 # FLASK
 # =====================================================
@@ -421,13 +421,79 @@ def simulador_iza():
     )
 
 # =====================================================
+# RESULTADO
+# =====================================================
+
+@app.route('/resultado')
+def resultado():
+    return render_template('resultado.html')
+
+# =====================================================
+# DESCARGAR EXCEL
+# =====================================================
+
+@app.route('/descargar_excel')
+def descargar_excel():
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Resultados"
+
+    ws.append(["RESULTADOS"])
+    ws.append(["Carretera", session.get('carretera')])
+    ws.append(["Vehículo", session.get('vehiculo')])
+    ws.append(["Clima", session.get('clima')])
+    ws.append(["Dificultad", session.get('dificultad')])
+    ws.append(["Puntaje", session.get('puntaje')])
+    ws.append(["Tiempo", session.get('tiempo')])
+    ws.append(["Velocidad", session.get('velocidad')])
+    ws.append(["Animales", session.get('animales')])
+
+    archivo = io.BytesIO()
+    wb.save(archivo)
+    archivo.seek(0)
+
+    return send_file(
+        archivo,
+        as_attachment=True,
+        download_name="resultados.xlsx",
+        mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+# =====================================================
+# DESCARGAR WORD
+# =====================================================
+
+@app.route('/descargar_word')
+def descargar_word():
+
+    doc = Document()
+    doc.add_heading('RESULTADOS DEL SIMULADOR', 0)
+
+    doc.add_paragraph(f"Carretera: {session.get('carretera')}")
+    doc.add_paragraph(f"Vehículo: {session.get('vehiculo')}")
+    doc.add_paragraph(f"Clima: {session.get('clima')}")
+    doc.add_paragraph(f"Dificultad: {session.get('dificultad')}")
+    doc.add_paragraph(f"Puntaje: {session.get('puntaje')}")
+    doc.add_paragraph(f"Tiempo: {session.get('tiempo')}")
+    doc.add_paragraph(f"Velocidad: {session.get('velocidad')}")
+    doc.add_paragraph(f"Animales: {session.get('animales')}")
+
+    archivo = io.BytesIO()
+    doc.save(archivo)
+    archivo.seek(0)
+
+    return send_file(
+        archivo,
+        as_attachment=True,
+        download_name="resultados.docx",
+        mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    )
+
+# =====================================================
 # MAIN
 # =====================================================
 
 if __name__ == '__main__':
 
-    app.run(
-        host="0.0.0.0",
-        port=10000,
-        debug=True
-    )
+    app.run(host="0.0.0.0", port=10000, debug=True)
