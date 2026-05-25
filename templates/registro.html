@@ -1,88 +1,87 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static', filename= 'css/registro.css')}}">
     <title>Registro</title>
 </head>
+
 <body>
 
-<main class="contenedor-registro">
+    <main class="contenedor-registro">
 
-    <h1>REGISTRO DEL USUARIO</h1>
+        <h1>REGISTRO DEL USUARIO</h1>
 
-    <form action="/seleccion_carretera" method="POST">
+        <!-- 🔥 AHORA ENVÍA A /registro -->
+        <form action="/registro" method="POST">
 
-        <div class="campo">
+            <!-- NOMBRE -->
+            <div class="campo">
 
-            <label>Nombre del usuario</label>
+                <label>Nombre del usuario</label>
 
-            <input type="text"
-            placeholder="Ingrese su nombre">
+                <input type="text" name="nombre" placeholder="Ingrese su nombre" required>
 
-        </div>
-
-        <div id="campo">
-
-            <label>
-                ¿Qué tipo de vehículo utiliza?
-            </label>
-        
-            <div id="grupo-vehiculos">
-        
-                <div class="vehiculo-item">
-        
-                    <span>Automóvil</span>
-        
-                    <select>
-        
-                        <option>Seleccione</option>
-        
-                        <option>Particular</option>
-        
-                        <option>Camioneta</option>
-        
-                    </select>
-        
-                </div>
-        
-                <div class="vehiculo-item">
-        
-                    <span>Motocicleta</span>
-        
-                    <input type="checkbox">
-        
-                </div>
-        
-                <div class="vehiculo-item">
-        
-                    <span>Bicicleta</span>
-        
-                    <input type="checkbox">
-        
-                </div>
-        
             </div>
-        
-        </div>
-        
-        <div class="botones">
 
-            <button type="button" onclick="window.location.href='seleccion_carretera'">
-                Continuar
-            </button>
-        
-            <button type="button"
-            onclick="window.location.href='/'">        
-                Volver       
-            </button>
-        
-        </div>
+            <!-- VEHÍCULO -->
+            <div id="campo">
 
-    </form>
+                <label>¿Qué tipo de vehículo utiliza?</label>
 
-</main>
+                <div id="grupo-vehiculos">
+
+                    <div class="vehiculo-item">
+
+                        <span>Automóvil</span>
+
+                        <select name="vehiculo">
+                            <option value="">Seleccione</option>
+                            <option value="Automovil">Particular</option>
+                            <option value="Camioneta">Camioneta</option>
+                        </select>
+
+                    </div>
+
+                    <div class="vehiculo-item">
+
+                        <span>Motocicleta</span>
+
+                        <input type="radio" name="vehiculo" value="Motocicleta">
+
+                    </div>
+
+                    <div class="vehiculo-item">
+
+                        <span>Bicicleta</span>
+
+                        <input type="radio" name="vehiculo" value="Bicicleta">
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- BOTONES -->
+            <div class="botones">
+
+                <button type="submit">
+                    Continuar
+                </button>
+
+                <button type="button" onclick="window.location.href='/'">
+                    Volver
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
 
 </body>
+
 </html>

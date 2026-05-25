@@ -168,8 +168,15 @@ def api_iza_animales():
 # REGISTRO
 # =====================================================
 
-@app.route('/registro')
+@app.route('/registro', methods=['GET', 'POST'])
 def registro():
+
+    if request.method == 'POST':
+
+        session['nombre'] = request.form.get('nombre')
+        session['vehiculo'] = request.form.get('vehiculo')
+
+        return redirect(url_for('seleccion_carretera'))
 
     return render_template('registro.html')
 
@@ -294,48 +301,7 @@ def simulador_tibasosa():
     dificultad = session.get('dificultad', 'Media')
 
     # Animales base
-    animales = [
-        {
-            "nombre": "Zorro",
-            "descripcion": "Cruce frecuente en la vía",
-            "imagen": "zorro"
-        },
-        {
-            "nombre": "Venado",
-            "descripcion": "Animal detectado cerca del río",
-            "imagen": "venado"
-        },
-        {
-            "nombre": "Conejo",
-            "descripcion": "Cruce inesperado en carretera",
-            "imagen": "conejo"
-        },
-        {
-            "nombre": "Ardilla",
-            "descripcion": "Paso rápido entre árboles",
-            "imagen": "ardilla"
-        },
-        {
-            "nombre": "Perro",
-            "descripcion": "Animal doméstico en la vía",
-            "imagen": "perro"
-        },
-        {
-            "nombre": "Gato",
-            "descripcion": "Cruce nocturno frecuente",
-            "imagen": "gato"
-        },
-        {
-            "nombre": "Lechuza",
-            "descripcion": "Vuelo bajo cercano",
-            "imagen": "lechuza"
-        },
-        {
-            "nombre": "Caballo",
-            "descripcion": "Animal suelto en carretera",
-            "imagen": "caballo"
-        }
-    ]
+    animales = []
 
     # Cargar animales de Firebase
     try:
@@ -362,6 +328,54 @@ def simulador_tibasosa():
         'simulador_tibasosa.html',
         vehiculo=vehiculo,
         carretera="Tibasosa",
+        clima=clima,
+        dificultad=dificultad,
+        animales=animales
+    )
+
+
+# =====================================================
+# SIMULADOR CORRALES
+# =====================================================
+
+@app.route('/simulador_corrales')
+def simulador_corrales():
+
+    vehiculo = session.get('vehiculo', 'camioneta')
+    clima = session.get('clima', 'Soleado')
+    dificultad = session.get('dificultad', 'Media')
+
+    # =========================================
+    # ANIMALES CORRALES
+    # =========================================
+
+    docs = db.collection("Corrales").stream()
+
+    animales = []
+
+    for doc in docs:
+
+        datos = doc.to_dict()
+
+        animales.append({
+
+            "nombre": datos.get("nombre", "Animal"),
+            "descripcion": datos.get("descripcion", "Cruce de fauna"),
+            "imagen": datos.get("imagen", "default.png")
+
+        })
+
+    print("===================================")
+    print("ANIMALES CORRALES")
+    print(animales)
+    print("===================================")
+
+    return render_template(
+
+        'simulador_corrales.html',
+
+        vehiculo=vehiculo,
+        carretera="Corrales",
         clima=clima,
         dificultad=dificultad,
         animales=animales

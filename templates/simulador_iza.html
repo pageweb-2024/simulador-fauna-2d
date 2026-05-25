@@ -4,9 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulador Corrales</title>
+    <title>Simulador Iza</title>
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_tibasosa.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_iza.css') }}">
 </head>
 
 <body>
@@ -22,8 +22,8 @@
             <!-- MAPA -->
             <div class="mapa-container">
                 <img id="mapa" class="fondo"
-                    src="{{ url_for('static', filename='img/Sogamoso_corrales.png') }}"
-                    alt="Mapa Corrales">
+                    src="{{ url_for('static', filename='img/Sogamoso_iza.png') }}"
+                    alt="Mapa Iza">
             </div>
 
             <!-- ANIMAL -->
@@ -97,17 +97,12 @@
                 Riesgo detectado
             </div>
 
-            <!-- Animal detectado -->
             <div class="animal-alerta">
-
                 <div class="animal-card">
-
                     <div class="animal-circulo">
                         <img id="animalPanel" class="animal-img" src="" alt="Animal">
                     </div>
-
                 </div>
-
             </div>
 
             <!-- CONFIGURACIÓN -->
@@ -143,10 +138,7 @@
 
     </main>
 
-    <!-- ===========================
-     PANEL COLISIÓN
-    =========================== -->
-
+    <!-- PANEL COLISIÓN -->
     <div id="colisionPanel" class="colision oculto">
 
         <h2>💥 ¡ATROPELLASTE UN ANIMAL!</h2>
@@ -164,7 +156,7 @@
     </script>
 
     <!-- JS -->
-    <script src="{{ url_for('static', filename='js/simulador_corrales.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/simulador_iza.js') }}"></script>
 
 </body>
 
