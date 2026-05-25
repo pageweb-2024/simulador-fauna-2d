@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados del Simulador</title>
+    <title>Resultados</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/resultado.css') }}">
 </head>
 
@@ -12,69 +12,36 @@
 
     <div class="contenedor">
 
-        <h1>RESULTADOS DEL SIMULADOR</h1>
-
-        <div class="panel-resultados">
-
-            <div class="dato">
-                <span>Carretera</span>
-                <strong>{{ session.get('carretera') }}</strong>
-            </div>
-
-            <div class="dato">
-                <span>Vehículo</span>
-                <strong>{{ session.get('vehiculo') }}</strong>
-            </div>
-
-            <div class="dato">
-                <span>Clima</span>
-                <strong>{{ session.get('clima') }}</strong>
-            </div>
-
-            <div class="dato">
-                <span>Dificultad</span>
-                <strong>{{ session.get('dificultad') }}</strong>
-            </div>
-
-            <div class="dato">
-                <span>Puntaje</span>
-                <strong>{{ session.get('puntaje') }}</strong>
-            </div>
-
-            <div class="dato">
-                <span>Tiempo</span>
-                <strong>{{ session.get('tiempo') }}</strong>
-            </div>
-
-            <div class="dato">
-                <span>Velocidad Máxima</span>
-                <strong>{{ session.get('velocidad') }} km/h</strong>
-            </div>
-
-            <div class="dato">
-                <span>Animales Esquivados</span>
-                <strong>{{ session.get('animales') }}</strong>
-            </div>
-
-        </div>
+        <h1>RESULTADOS <br> DE LA PRUEBA</h1>
 
         <div class="formatos">
 
-            <a href="/descargar_excel" class="btn excel">
-                📊 Descargar Excel
-            </a>
+            <!-- EXCEL -->
+            <div class="opcion">
+                <a href="/descargar_excel" class="btn">
+                    <img src="{{ url_for('static', filename='img/excel.png') }}" alt="Excel">
+                </a>
 
-            <a href="/descargar_word" class="btn word">
-                📄 Descargar Word
-            </a>
+                <button onclick="window.location.href='/'">
+                    REINICIAR
+                </button>
+            </div>
+
+            <!-- WORD -->
+            <div class="opcion">
+                <a href="/descargar_word" class="btn">
+                    <img src="{{ url_for('static', filename='img/word.png') }}" alt="Word">
+                </a>
+
+                <button onclick="window.location.href='/'">
+                    FINALIZAR
+                </button>
+            </div>
 
         </div>
 
-        <button id="reiniciar">VOLVER AL INICIO</button>
-
     </div>
 
-    <script src="{{ url_for('static', filename='js/resultado.js') }}"></script>
 </body>
 
 </html>
