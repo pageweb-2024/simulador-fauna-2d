@@ -17,6 +17,8 @@ const opcion2 = document.getElementById("opcion2");
 
 const animal = document.getElementById("animalMovimiento");
 
+console.log("Animales Firebase:", animalesFirebase);
+
 panel.classList.add("oculto");
 colisionPanel.classList.add("oculto");
 
@@ -25,6 +27,7 @@ colisionPanel.classList.add("oculto");
 =========================== */
 
 let juegoPausado = false;
+let enColision = false;
 
 /* ===========================
    ANIMAL
@@ -87,7 +90,6 @@ document.addEventListener("keyup", e => {
 =========================== */
 
 function actualizarTiempo() {
-
     if (juegoPausado) return;
 
     if (tiempoTotal <= 0) {
@@ -118,9 +120,8 @@ function actualizarPuntaje() {
 
 function generarAnimal() {
 
-    if (juegoPausado) return;
-    if (animalActivo) return;
-    if (!animalesFirebase.length) return;
+    if (juegoPausado || animalActivo) return;
+    if (!animalesFirebase || !animalesFirebase.length) return;
 
     animalActivo = true;
 
@@ -128,11 +129,14 @@ function generarAnimal() {
         Math.floor(Math.random() * animalesFirebase.length)
     ];
 
-    animal.src = `/static/img/${a.imagen}.png`;
-    animalPanel.src = `/static/img/${a.imagen}.png`;
+    // ✔ CORRECTO: usar Firebase directamente
+    let rutaImagen = a.Imagen;
 
-    animalNombre.innerText = a.nombre;
-    animalDescripcion.innerText = a.descripcion;
+    animal.src = `/static/img/imgiza/${rutaImagen}`;
+    animalPanel.src = `/static/img/imgiza/${rutaImagen}`;
+
+    animalNombre.innerText = a.Animal || "FAUNA";
+    animalDescripcion.innerText = a["Información"] || "Reduce la velocidad";
 
     animal.style.display = "block";
 
@@ -140,28 +144,28 @@ function generarAnimal() {
 
     switch (lado) {
 
-        case 0: // potrero izquierdo
+        case 0:
             animalX = window.innerWidth * 0.15;
             animalY = window.innerHeight * (0.25 + Math.random() * 0.5);
             animalDX = velocidadAnimal;
             animalDY = (Math.random() - 0.5) * 2;
             break;
 
-        case 1: // potrero derecho
+        case 1:
             animalX = window.innerWidth * 0.85;
             animalY = window.innerHeight * (0.25 + Math.random() * 0.5);
             animalDX = -velocidadAnimal;
             animalDY = (Math.random() - 0.5) * 2;
             break;
 
-        case 2: // diagonal izquierda
+        case 2:
             animalX = window.innerWidth * 0.20;
             animalY = window.innerHeight * 0.15;
             animalDX = velocidadAnimal;
             animalDY = velocidadAnimal * 0.5;
             break;
 
-        case 3: // diagonal derecha
+        case 3:
             animalX = window.innerWidth * 0.80;
             animalY = window.innerHeight * 0.15;
             animalDX = -velocidadAnimal;
@@ -205,73 +209,68 @@ function moverAnimal() {
 }
 
 /* ===========================
-   DETECTAR COLISIÓN
+   COLISIÓN
 =========================== */
 
 function detectarColision() {
 
-    if (juegoPausado || !animalActivo) return;
+    if (juegoPausado || !animalActivo || animal.style.display === "none") return;
 
-    let r1 = vehiculo.getBoundingClientRect();
-    let r2 = animal.getBoundingClientRect();
+    const r1 = vehiculo.getBoundingClientRect();
+    const r2 = animal.getBoundingClientRect();
 
-    let choque = !(
-        r1.right < r2.left ||
-        r1.left > r2.right ||
-        r1.bottom < r2.top ||
-        r1.top > r2.bottom
-    );
+    const choque =
+        r1.left < r2.right &&
+        r1.right > r2.left &&
+        r1.top < r2.bottom &&
+        r1.bottom > r2.top;
 
-    if (choque) {
+    if (choque && !enColision && velocidad > 20) {
 
-        if (velocidad <= 20) {
-            return;
-        }
-
+        enColision = true;
         animalActivo = false;
         animal.style.display = "none";
+
         mostrarColision();
     }
 }
 
 /* ===========================
-   COLISIÓN
+   COLISIÓN PANEL
 =========================== */
 
 function mostrarColision() {
 
     juegoPausado = true;
 
-    colisionTexto.innerText =
-        "Atropellaste un animal. ¿Qué haces?";
+    colisionTexto.innerText = "Atropellaste un animal. ¿Qué haces?";
 
     opcion1.innerText = "Ayudar (+10)";
     opcion2.innerText = "Huir (-20)";
 
     colisionPanel.classList.remove("oculto");
-
-    opcion1.onclick = () => {
-        puntaje += 10;
-        cerrarColision();
-    };
-
-    opcion2.onclick = () => {
-        puntaje -= 20;
-        cerrarColision();
-    };
 }
+
+opcion1.onclick = () => {
+    puntaje += 10;
+    cerrarColision();
+};
+
+opcion2.onclick = () => {
+    puntaje -= 20;
+    cerrarColision();
+};
 
 function cerrarColision() {
 
     colisionPanel.classList.add("oculto");
 
-    panel.classList.remove("visible");
-    panel.classList.add("oculto");
+    enColision = false;
+    juegoPausado = false;
 
     if (puntaje < 0) puntaje = 0;
 
     actualizarPuntaje();
-    juegoPausado = false;
 }
 
 /* ===========================
@@ -279,7 +278,6 @@ function cerrarColision() {
 =========================== */
 
 function finalizarSimulacion() {
-
     alert("SIMULACIÓN FINALIZADA\n\nPUNTAJE: " + puntaje);
     location.reload();
 }
@@ -346,6 +344,10 @@ function actualizar() {
     moverAnimal();
     detectarColision();
 }
+
+/* ===========================
+   EVENTOS EXTRA
+=========================== */
 
 document.getElementById("finalizar").addEventListener("click", function () {
     window.location.href = "/resultado";
