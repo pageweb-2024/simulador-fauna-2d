@@ -15,12 +15,36 @@ const colisionTexto = document.getElementById("colisionTexto");
 const opcion1 = document.getElementById("opcion1");
 const opcion2 = document.getElementById("opcion2");
 
+const ayudaPanel = document.getElementById("ayudaPanel");
+const accion1 = document.getElementById("accion1");
+const accion2 = document.getElementById("accion2");
+const accion3 = document.getElementById("accion3");
+
 const animal = document.getElementById("animalMovimiento");
+const lluvia = document.getElementById("lluvia");
 
 console.log("Animales Firebase:", animalesFirebase);
 
 panel.classList.add("oculto");
 colisionPanel.classList.add("oculto");
+ayudaPanel.classList.add("oculto");
+
+/* ===========================
+   OPCIONES DESDE LOCALSTORAGE
+=========================== */
+
+const clima = localStorage.getItem("clima") || "sol";
+const dificultad = localStorage.getItem("dificultad") || "normal";
+
+document.getElementById("climaMostrado").innerText = clima;
+document.getElementById("dificultadMostrada").innerText = dificultad;
+
+/* LLUVIA */
+if (clima === "lluvia") {
+    lluvia.style.display = "block";
+} else {
+    lluvia.style.display = "none";
+}
 
 /* ===========================
    ESTADO
@@ -38,7 +62,19 @@ let animalY = 0;
 let animalDX = 0;
 let animalDY = 0;
 let animalActivo = false;
-let velocidadAnimal = 4;
+
+/* DIFICULTAD */
+
+let velocidadAnimal;
+let intervaloAnimal;
+
+if (dificultad === "dificil") {
+    velocidadAnimal = 7;
+    intervaloAnimal = 10000;
+} else {
+    velocidadAnimal = 4;
+    intervaloAnimal = 20000;
+}
 
 /* ===========================
    VEHÍCULO
@@ -129,7 +165,6 @@ function generarAnimal() {
         Math.floor(Math.random() * animalesFirebase.length)
     ];
 
-    // ✔ CORRECTO: usar Firebase directamente
     let rutaImagen = a.Imagen;
 
     animal.src = `/static/img/imgtibasosa/${rutaImagen}`;
@@ -236,24 +271,23 @@ function detectarColision() {
 }
 
 /* ===========================
-   COLISIÓN PANEL
+   PANEL COLISIÓN
 =========================== */
 
 function mostrarColision() {
-
     juegoPausado = true;
 
     colisionTexto.innerText = "Atropellaste un animal. ¿Qué haces?";
 
-    opcion1.innerText = "Ayudar (+10)";
-    opcion2.innerText = "Huir (-20)";
+    opcion1.innerText = "Ayudar";
+    opcion2.innerText = "Huir";
 
     colisionPanel.classList.remove("oculto");
 }
 
 opcion1.onclick = () => {
-    puntaje += 10;
-    cerrarColision();
+    colisionPanel.classList.add("oculto");
+    ayudaPanel.classList.remove("oculto");
 };
 
 opcion2.onclick = () => {
@@ -261,10 +295,34 @@ opcion2.onclick = () => {
     cerrarColision();
 };
 
+/* ===========================
+   ACCIONES DE AYUDA
+=========================== */
+
+accion1.onclick = () => {
+    puntaje += 10;
+    cerrarAyuda();
+};
+
+accion2.onclick = () => {
+    puntaje += 15;
+    cerrarAyuda();
+};
+
+accion3.onclick = () => {
+    puntaje += 20;
+    cerrarAyuda();
+};
+
+function cerrarAyuda() {
+    ayudaPanel.classList.add("oculto");
+    enColision = false;
+    juegoPausado = false;
+    actualizarPuntaje();
+}
+
 function cerrarColision() {
-
     colisionPanel.classList.add("oculto");
-
     enColision = false;
     juegoPausado = false;
 
@@ -293,12 +351,8 @@ function actualizar() {
     if (juegoPausado) return;
 
     if (teclas["w"]) aceleracion += fuerzaMotor;
-
-    if (teclas["s"] && velocidad > 0)
-        aceleracion -= fuerzaFreno;
-
-    if (!teclas["w"] && !teclas["s"] && velocidad > 0)
-        aceleracion -= friccion;
+    if (teclas["s"] && velocidad > 0) aceleracion -= fuerzaFreno;
+    if (!teclas["w"] && !teclas["s"] && velocidad > 0) aceleracion -= friccion;
 
     velocidad += aceleracion;
 
@@ -316,14 +370,8 @@ function actualizar() {
 
     let angulo = direccion * (10 + velocidad * 0.08);
 
-    let inclinacionFreno = 0;
-
-    if (teclas["s"] && velocidad > 0) {
-        inclinacionFreno = -6;
-    }
-
     vehiculo.style.transform =
-        `translate(-50%, -50%) rotate(${angulo}deg) skewY(${inclinacionFreno}deg)`;
+        `translate(-50%, -50%) rotate(${angulo}deg)`;
 
     if (x < limiteIzquierdo) x = limiteIzquierdo;
     if (x > limiteDerecho) x = limiteDerecho;
@@ -346,7 +394,7 @@ function actualizar() {
 }
 
 /* ===========================
-   EVENTOS EXTRA
+   EVENTOS
 =========================== */
 
 document.getElementById("finalizar").addEventListener("click", function () {
@@ -360,7 +408,7 @@ document.getElementById("finalizar").addEventListener("click", function () {
 actualizarTiempo();
 actualizarPuntaje();
 
-setInterval(generarAnimal, 8000);
+setInterval(generarAnimal, intervaloAnimal);
 setInterval(actualizarTiempo, 1000);
 
 actualizar();

@@ -550,3 +550,159 @@ html,body{
         transform:translate(-50%, -50%) scale(1);
     }
 }
+
+/* ==========================
+   PANEL AYUDA AL ANIMAL
+========================== */
+
+#ayudaPanel{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%, -50%);
+    width:550px;
+    max-width:92%;
+    background:rgba(15,23,42,0.97);
+    border:4px solid #22c55e;
+    border-radius:25px;
+    padding:35px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    z-index:10001;
+    box-shadow:0 0 45px rgba(34,197,94,0.45);
+    animation:popupAyuda .35s ease;
+}
+
+#ayudaPanel h2{
+    font-size:30px;
+    font-weight:900;
+    color:#22c55e;
+    margin-bottom:20px;
+}
+
+#ayudaPanel p{
+    font-size:20px;
+    color:white;
+    margin-bottom:25px;
+}
+
+/* Botones de ayuda */
+#ayudaPanel button{
+    width:100%;
+    padding:16px;
+    margin:10px 0;
+    border:none;
+    border-radius:16px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.25s;
+    color:white;
+}
+
+/* Acción 1 */
+#accion1{
+    background:#f59e0b;
+}
+
+/* Acción 2 */
+#accion2{
+    background:#3b82f6;
+}
+
+/* Acción 3 */
+#accion3{
+    background:#22c55e;
+}
+
+/* Hover */
+#ayudaPanel button:hover{
+    transform:scale(1.04);
+    filter:brightness(1.1);
+}
+
+/* Fondo oscuro */
+#ayudaPanel::before{
+    content:"";
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.75);
+    z-index:-1;
+}
+
+/* Animación */
+@keyframes popupAyuda{
+    from{
+        opacity:0;
+        transform:translate(-50%, -50%) scale(0.7);
+    }
+    to{
+        opacity:1;
+        transform:translate(-50%, -50%) scale(1);
+    }
+}
+
+/* ==========================
+   LLUVIA
+========================== */
+
+#lluvia{
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    background-image:url("/static/img/lluvia.gif");
+    background-size:cover;
+    background-position:center;
+    display:none;
+    pointer-events:none;
+    z-index:40;
+    opacity:.65;
+}
+
+/* ==========================
+   CONFIGURACIÓN PANEL
+========================== */
+
+.opciones-simulador{
+    display:flex;
+    flex-direction:column;
+    gap:12px;
+}
+
+.opciones-simulador h2{
+    text-align:center;
+    color:#1e40af;
+    margin-bottom:10px;
+}
+
+.item-opcion span{
+    color:#111827;
+    font-weight:900;
+}
+
+/* ==========================
+   AJUSTES CAPAS
+========================== */
+
+.fondo{
+    z-index:1;
+}
+
+.animal-movimiento{
+    z-index:45;
+}
+
+.vehiculo{
+    z-index:50;
+}
+
+.hud{
+    z-index:100;
+}
+
+.panel{
+    z-index:999;
+}

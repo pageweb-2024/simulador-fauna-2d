@@ -3,7 +3,9 @@
 
 <head>
 
-    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tibasosa.css') }}">
 
     <title>Tibasosa</title>
 
@@ -11,37 +13,44 @@
 
 <body>
 
-<table border="1">
+    <h1>Sogamoso - Tibasosa</h1>
 
-    <tr>
+    <table border="1">
 
-        <th>Animal</th>
+        <tr>
 
-        <th>Nivel</th>
+            <th>Animal</th>
 
-        <th>Cruce</th>
+            <th>Nivel</th>
 
-        <th>Información</th>
+            <th>Cruce</th>
 
-    </tr>
+            <th>Información</th>
 
-    {% for fila in datos %}
+        </tr>
 
-    <tr>
+        {% for fila in datos %}
 
-        <td>{{ fila["Animal"] }}</td>
+        <tr>
 
-        <td>{{ fila["Nivel de aparición"] }}</td>
+            <td>{{ fila["Animal"] }}</td>
 
-        <td>{{ fila["Tipo de cruce"] }}</td>
+            <td>{{ fila["Nivel de aparición"] }}</td>
 
-        <td>{{ fila["Información"] }}</td>
+            <td>{{ fila["Tipo de cruce"] }}</td>
 
-    </tr>
+            <td>{{ fila["Información"] }}</td>
 
-    {% endfor %}
+        </tr>
 
-</table>
+        {% endfor %}
+
+    </table>
+
+    <button onclick="window.location.href='/tablas'">
+        Volver
+    </button>
+
 
 </body>
 

@@ -19,18 +19,23 @@
 
         <section class="carretera">
 
-            <!-- MAPA -->
             <div class="mapa-container">
+
+                <!-- MAPA -->
                 <img id="mapa" class="fondo" src="{{ url_for('static', filename='img/Sogamoso_tibasosa.png') }}"
                     alt="Mapa Tibasosa">
+
+                <!-- LLUVIA -->
+                <div id="lluvia"></div>
+
+                <!-- ANIMAL -->
+                <img id="animalMovimiento" class="animal-movimiento" src="" alt="Animal">
+
+                <!-- VEHÍCULO -->
+                <img id="vehiculo" class="vehiculo" src="{{ url_for('static', filename='img/' ~ vehiculo ~ '.png') }}"
+                    alt="Vehículo">
+
             </div>
-
-            <!-- ANIMAL -->
-            <img id="animalMovimiento" class="animal-movimiento" src="" alt="Animal">
-
-            <!-- VEHÍCULO -->
-            <img id="vehiculo" class="vehiculo" src="{{ url_for('static', filename='img/' ~ vehiculo ~ '.png') }}"
-                alt="Vehículo">
 
             <!-- ===========================
              HUD
@@ -75,8 +80,9 @@
 
         </section>
 
+
         <!-- ===========================
-         PANEL ALERTA (FAUNA)
+         PANEL ALERTA
     =========================== -->
 
         <aside id="panelAlerta" class="panel oculto">
@@ -93,20 +99,15 @@
                 Riesgo detectado
             </div>
 
-            <!-- Animal detectado -->
             <div class="animal-alerta">
-
                 <div class="animal-card">
-
                     <div class="animal-circulo">
                         <img id="animalPanel" class="animal-img" src="" alt="Animal">
                     </div>
-
                 </div>
-
             </div>
 
-            <!-- CONFIGURACIÓN -->
+            <!-- CONFIG -->
             <div class="opciones-simulador">
 
                 <h2>CONFIGURACIÓN</h2>
@@ -118,29 +119,32 @@
 
                 <div class="item-opcion">
                     🛣️ Carretera
-                    <span>{{ carretera }}</span>
+                    <span>Tibasosa</span>
                 </div>
 
                 <div class="item-opcion">
                     🌦️ Clima
-                    <span>{{ clima }}</span>
+                    <span id="climaMostrado">Cargando...</span>
                 </div>
 
                 <div class="item-opcion">
                     🎚️ Dificultad
-                    <span>{{ dificultad }}</span>
+                    <span id="dificultadMostrada">Cargando...</span>
                 </div>
 
             </div>
 
-            <button class="btn-finalizar" id="finalizar">Finalizar</button>
+            <button class="btn-finalizar" id="finalizar">
+                Finalizar
+            </button>
 
         </aside>
 
     </main>
 
+
     <!-- ===========================
-     🪟 VENTANA FLOTANTE COLISIÓN
+     PANEL COLISIÓN
 =========================== -->
 
     <div id="colisionPanel" class="colision oculto">
@@ -149,20 +153,35 @@
 
         <p id="colisionTexto">¿Qué decisión tomas?</p>
 
-        <button id="opcion1">Opción 1</button>
-        <button id="opcion2">Opción 2</button>
+        <button id="opcion1">Ayudar</button>
+        <button id="opcion2">Huir</button>
 
     </div>
 
+
     <!-- ===========================
-     DATOS DESDE FLASK
+     PANEL AYUDA
 =========================== -->
 
+    <div id="ayudaPanel" class="colision oculto">
+
+        <h2>🆘 PROTOCOLO DE ATENCIÓN</h2>
+
+        <p>Selecciona una acción responsable:</p>
+
+        <button id="accion1">🛑 Señalizar y colocar conos</button>
+        <button id="accion2">📞 Llamar autoridades ambientales</button>
+        <button id="accion3">🚑 Solicitar apoyo veterinario</button>
+
+    </div>
+
+
+    <!-- DATOS FLASK -->
     <script>
         const animalesFirebase = JSON.parse('{{ animales|tojson|safe }}');
     </script>
 
-    <!-- JS DEL SIMULADOR -->
+    <!-- SIMULADOR -->
     <script src="{{ url_for('static', filename='js/simulador_tibasosa.js') }}"></script>
 
 </body>

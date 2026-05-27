@@ -15,12 +15,18 @@ const colisionTexto = document.getElementById("colisionTexto");
 const opcion1 = document.getElementById("opcion1");
 const opcion2 = document.getElementById("opcion2");
 
+const ayudaPanel = document.getElementById("ayudaPanel");
+const accion1 = document.getElementById("accion1");
+const accion2 = document.getElementById("accion2");
+const accion3 = document.getElementById("accion3");
+
 const animal = document.getElementById("animalMovimiento");
 
 console.log("Animales Firebase:", animalesFirebase);
 
 panel.classList.add("oculto");
 colisionPanel.classList.add("oculto");
+ayudaPanel.classList.add("oculto");
 
 /* ===========================
    ESTADO
@@ -90,7 +96,6 @@ document.addEventListener("keyup", e => {
 =========================== */
 
 function actualizarTiempo() {
-
     if (juegoPausado) return;
 
     if (tiempoTotal <= 0) {
@@ -116,13 +121,13 @@ function actualizarPuntaje() {
 }
 
 /* ===========================
-   GENERAR ANIMAL (FIXED)
+   GENERAR ANIMAL
 =========================== */
 
 function generarAnimal() {
 
-    if (juegoPausado || animalActivo || enColision) return;
-    if (!animalesFirebase || animalesFirebase.length === 0) return;
+    if (juegoPausado || animalActivo) return;
+    if (!animalesFirebase || !animalesFirebase.length) return;
 
     animalActivo = true;
 
@@ -130,16 +135,10 @@ function generarAnimal() {
         Math.floor(Math.random() * animalesFirebase.length)
     ];
 
-    // 🔥 FIX CLAVE: limpiar espacios
-    let rutaImagen = (a.Imagen || "").trim();
+    let rutaImagen = a.Imagen;
 
-    // fallback si no hay imagen
-    if (!rutaImagen) rutaImagen = "default.jpeg";
-
-    const rutaFinal = `/static/img/imgcorrales/${rutaImagen}`;
-
-    animal.src = rutaFinal;
-    animalPanel.src = rutaFinal;
+    animal.src = `/static/img/imgcorrales/${rutaImagen}`;
+    animalPanel.src = `/static/img/imgcorrales/${rutaImagen}`;
 
     animalNombre.innerText = a.Animal || "FAUNA";
     animalDescripcion.innerText = a["Información"] || "Reduce la velocidad";
@@ -201,10 +200,10 @@ function moverAnimal() {
     animal.style.top = animalY + "px";
 
     if (
-        animalX < -200 ||
-        animalX > window.innerWidth + 200 ||
-        animalY < -200 ||
-        animalY > window.innerHeight + 200
+        animalX < -150 ||
+        animalX > window.innerWidth + 150 ||
+        animalY < -150 ||
+        animalY > window.innerHeight + 150
     ) {
         animalActivo = false;
         animal.style.display = "none";
@@ -215,7 +214,7 @@ function moverAnimal() {
 }
 
 /* ===========================
-   COLISIÓN (FIXED)
+   COLISIÓN
 =========================== */
 
 function detectarColision() {
@@ -242,7 +241,7 @@ function detectarColision() {
 }
 
 /* ===========================
-   COLISIÓN PANEL
+   PANEL COLISIÓN
 =========================== */
 
 function mostrarColision() {
@@ -251,21 +250,52 @@ function mostrarColision() {
 
     colisionTexto.innerText = "Atropellaste un animal. ¿Qué haces?";
 
-    opcion1.innerText = "Ayudar (+10)";
-    opcion2.innerText = "Huir (-20)";
+    opcion1.innerText = "Ayudar";
+    opcion2.innerText = "Huir";
 
     colisionPanel.classList.remove("oculto");
 }
 
 opcion1.onclick = () => {
-    puntaje += 10;
-    cerrarColision();
+    colisionPanel.classList.add("oculto");
+    ayudaPanel.classList.remove("oculto");
 };
 
 opcion2.onclick = () => {
     puntaje -= 20;
     cerrarColision();
 };
+
+/* ===========================
+   ACCIONES DE AYUDA
+=========================== */
+
+accion1.onclick = () => {
+    puntaje += 10;
+    alert("🛑 Has señalizado la vía y colocado conos.");
+    cerrarAyuda();
+};
+
+accion2.onclick = () => {
+    puntaje += 15;
+    alert("📞 Has llamado a las autoridades ambientales.");
+    cerrarAyuda();
+};
+
+accion3.onclick = () => {
+    puntaje += 20;
+    alert("🚑 Se solicitó apoyo veterinario.");
+    cerrarAyuda();
+};
+
+function cerrarAyuda() {
+    ayudaPanel.classList.add("oculto");
+
+    enColision = false;
+    juegoPausado = false;
+
+    actualizarPuntaje();
+}
 
 function cerrarColision() {
 
@@ -289,7 +319,7 @@ function finalizarSimulacion() {
 }
 
 /* ===========================
-   LOOP
+   LOOP PRINCIPAL
 =========================== */
 
 function actualizar() {
@@ -352,7 +382,15 @@ function actualizar() {
 }
 
 /* ===========================
-   START
+   EVENTOS EXTRA
+=========================== */
+
+document.getElementById("finalizar").addEventListener("click", function () {
+    window.location.href = "/resultado";
+});
+
+/* ===========================
+   INICIO
 =========================== */
 
 actualizarTiempo();

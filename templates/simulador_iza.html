@@ -21,8 +21,7 @@
 
             <!-- MAPA -->
             <div class="mapa-container">
-                <img id="mapa" class="fondo"
-                    src="{{ url_for('static', filename='img/Sogamoso_iza.png') }}"
+                <img id="mapa" class="fondo" src="{{ url_for('static', filename='img/Sogamoso_iza.png') }}"
                     alt="Mapa Iza">
             </div>
 
@@ -30,8 +29,7 @@
             <img id="animalMovimiento" class="animal-movimiento" src="" alt="Animal">
 
             <!-- VEHÍCULO -->
-            <img id="vehiculo" class="vehiculo"
-                src="{{ url_for('static', filename='img/' ~ vehiculo ~ '.png') }}"
+            <img id="vehiculo" class="vehiculo" src="{{ url_for('static', filename='img/' ~ vehiculo ~ '.png') }}"
                 alt="Vehículo">
 
             <!-- ===========================
@@ -85,9 +83,7 @@
 
             <h1>⚠ ¡PRECAUCIÓN!</h1>
 
-            <img class="senal"
-                src="{{ url_for('static', filename='img/precaucion.png') }}"
-                alt="Señal fauna">
+            <img class="senal" src="{{ url_for('static', filename='img/precaucion.png') }}" alt="Señal fauna">
 
             <h2 id="animalNombre">FAUNA EN LA VÍA</h2>
 
@@ -136,6 +132,8 @@
 
         </aside>
 
+        <div id="lluvia"></div>
+
     </main>
 
     <!-- PANEL COLISIÓN -->
@@ -149,6 +147,22 @@
         <button id="opcion2">Opción 2</button>
 
     </div>
+    <!-- ===========================
+     🩺 VENTANA AYUDA AL ANIMAL
+    =========================== -->
+
+    <div id="ayudaPanel" class="colision oculto">
+
+        <h2>🆘 PROTOCOLO DE ATENCIÓN</h2>
+
+        <p>Selecciona una acción responsable:</p>
+
+        <button id="accion1">🛑 Señalizar y colocar conos</button>
+        <button id="accion2">📞 Llamar a autoridades ambientales</button>
+        <button id="accion3">🚑 Solicitar apoyo veterinario</button>
+
+    </div>
+
 
     <!-- DATOS DESDE FLASK -->
     <script>

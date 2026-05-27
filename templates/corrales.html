@@ -7,11 +7,15 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tibasosa.css') }}">
+
     <title>Tibasosa</title>
 
 </head>
 
 <body>
+
+    <h1>Sogamoso - Corrales</h1>
 
     <table border="1">
 
@@ -44,6 +48,11 @@
         {% endfor %}
 
     </table>
+
+    <button onclick="window.location.href='/tablas'">
+        Volver
+    </button>
+
 
 </body>
 

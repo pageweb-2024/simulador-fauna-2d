@@ -1,35 +1,37 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/tablas.css') }}">
     <title>Tablas</title>
 </head>
+
 <body>
-    
+
     <h1>Tablas e información de la fauna que cruza en cada via</h1>
 
     <div class="botones-vias">
 
         <button onclick="window.location.href='/tibasosa'">
-    
-           Sogamoso - Tibasosa
-    
+            Sogamoso - Tibasosa
         </button>
-    
+
         <button onclick="window.location.href='/corrales'">
-    
             Sogamoso - Corrales
-    
         </button>
-    
+
         <button onclick="window.location.href='/iza'">
-    
             Sogamoso - Iza
-    
         </button>
-    
+
     </div>
 
+    <button class="continuar" onclick="window.location.href='/registro'">
+        Continuar
+    </button>
+
 </body>
+
 </html>
