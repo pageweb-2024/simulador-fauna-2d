@@ -157,22 +157,18 @@ def simulador_iza():
 @app.route('/guardar_resultado', methods=['POST'])
 def guardar_resultado():
 
-    def safe_int(v):
-        try:
-            return int(v)
-        except:
-            return 0
+    session['puntaje'] = request.form.get('puntaje', 0)
+    session['tiempo'] = request.form.get('tiempo', 0)
+    session['velocidad'] = request.form.get('velocidad', 0)
 
-    session['puntaje'] = safe_int(request.form.get('puntaje'))
-    session['tiempo'] = safe_int(request.form.get('tiempo'))
-    session['velocidad'] = safe_int(request.form.get('velocidad'))
+    session['animales'] = request.form.get('animales', 0)
+    session['frenadas'] = request.form.get('frenadas', 0)
+    session['atropellados'] = request.form.get('atropellados', 0)
+    session['salvados'] = request.form.get('salvados', 0)
 
-    session['animales_detectados'] = safe_int(request.form.get('animales'))
-    session['frenadas'] = safe_int(request.form.get('frenadas'))
-    session['atropellados'] = safe_int(request.form.get('atropellados'))
-    session['salvados'] = safe_int(request.form.get('salvados'))
+    print("SESSION GUARDADA:", dict(session))
 
-    return redirect(url_for('resultado'))
+    return "ok"
 
 # ================= RESULTADO =================
 @app.route('/resultado')
@@ -192,7 +188,6 @@ def resultado():
         dificultad=session.get('dificultad')
     )
 
-# ================= EXCEL =================
 @app.route('/descargar_excel')
 def descargar_excel():
 
@@ -211,15 +206,25 @@ def descargar_excel():
         ["Salvados", session.get('salvados', 0)]
     ]
 
-    for f in datos:
-        ws.append(f)
+    for fila in datos:
+        ws.append(fila)
+
+    # =========================
+    # 🔥 FIX DEL GRÁFICO
+    # =========================
 
     chart = BarChart()
+
+    # SOLO valores (columna B)
     data = Reference(ws, min_col=2, min_row=2, max_row=len(datos))
+
+    # SOLO etiquetas (columna A)
     cats = Reference(ws, min_col=1, min_row=2, max_row=len(datos))
 
-    chart.add_data(data)
+    chart.add_data(data, titles_from_data=False)
     chart.set_categories(cats)
+    chart.title = "Resultados del Simulador"
+
     ws.add_chart(chart, "E2")
 
     archivo = io.BytesIO()
@@ -232,8 +237,6 @@ def descargar_excel():
         download_name="resultados.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
-
-# ================= WORD =================
 @app.route('/descargar_word')
 def descargar_word():
 

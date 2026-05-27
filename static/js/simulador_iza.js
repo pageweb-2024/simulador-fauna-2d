@@ -419,12 +419,58 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-/* ===========================
-   EVENTOS EXTRA
-=========================== */
+document.addEventListener("DOMContentLoaded", () => {
 
-document.getElementById("finalizar").addEventListener("click", function () {
-    window.location.href = "/resultado";
+    const boton = document.getElementById("finalizar");
+    if (!boton) return;
+
+    boton.addEventListener("click", async () => {
+
+        const confirmar = confirm("¿Finalizar simulación?");
+        if (!confirmar) return;
+
+        const getText = (id) => {
+            const el = document.getElementById(id);
+            return el ? el.innerText.trim() : "0";
+        };
+
+        const parseTime = (t) => {
+            // convierte "00:35" → segundos
+            if (!t.includes(":")) return Number(t) || 0;
+            const [m, s] = t.split(":").map(Number);
+            return (m * 60) + s;
+        };
+
+        const data = {
+            puntaje: Number(getText("puntaje") || 0),
+            tiempo: parseTime(getText("tiempo")),
+            velocidad: Number(getText("velocidad") || 0),
+
+            animales: window.animalesDetectados || 0,
+            frenadas: window.frenadas || 0,
+            atropellados: window.atropellados || 0,
+            salvados: window.salvados || 0
+        };
+
+        console.log("DATOS ENVIADOS:", data);
+
+        try {
+            await fetch("/guardar_resultado", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams(data)
+            });
+
+            window.location.href = "/resultado";
+
+        } catch (error) {
+            console.error(error);
+            alert("Error guardando resultados");
+        }
+    });
+
 });
 
 /* ===========================
