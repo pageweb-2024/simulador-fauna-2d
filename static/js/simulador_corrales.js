@@ -22,22 +22,46 @@ const accion3 = document.getElementById("accion3");
 
 const animal = document.getElementById("animalMovimiento");
 
-console.log("Animales Firebase:", animalesFirebase);
+/* ==========================
+   🌧️ CLIMA (ARREGLADO)
+========================== */
 
-panel.classList.add("oculto");
-colisionPanel.classList.add("oculto");
-ayudaPanel.classList.add("oculto");
+const clima = localStorage.getItem("clima");
 
-/* ===========================
+function activarLluvia() {
+
+    const lluvia = document.getElementById("lluvia");
+    if (!lluvia) return;
+
+    lluvia.style.display = "block";
+
+    for (let i = 0; i < 120; i++) {
+
+        let gota = document.createElement("div");
+        gota.classList.add("gota");
+
+        gota.style.left = Math.random() * window.innerWidth + "px";
+        gota.style.animationDuration = (0.4 + Math.random()) + "s";
+        gota.style.opacity = Math.random();
+
+        lluvia.appendChild(gota);
+    }
+}
+
+if (clima === "lluvia") {
+    activarLluvia();
+}
+
+/* ==========================
    ESTADO
-=========================== */
+========================== */
 
 let juegoPausado = false;
 let enColision = false;
 
-/* ===========================
+/* ==========================
    ANIMAL
-=========================== */
+========================== */
 
 let animalX = 0;
 let animalY = 0;
@@ -46,9 +70,9 @@ let animalDY = 0;
 let animalActivo = false;
 let velocidadAnimal = 4;
 
-/* ===========================
+/* ==========================
    VEHÍCULO
-=========================== */
+========================== */
 
 let x = window.innerWidth * 0.50;
 let y = window.innerHeight * 0.60;
@@ -60,9 +84,9 @@ let velocidad = 0;
 let aceleracion = 0;
 let mapaY = -100;
 
-/* ===========================
+/* ==========================
    CONFIG
-=========================== */
+========================== */
 
 const velocidadMax = 160;
 const fuerzaMotor = 0.35;
@@ -70,18 +94,18 @@ const fuerzaFreno = 1.5;
 const friccion = 0.05;
 const sensibilidadGiro = 0.05;
 
-/* ===========================
+/* ==========================
    TIEMPO / PUNTAJE
-=========================== */
+========================== */
 
 let tiempoTotal = 600;
 let puntaje = 0;
 
 const teclas = {};
 
-/* ===========================
+/* ==========================
    TECLAS
-=========================== */
+========================== */
 
 document.addEventListener("keydown", e => {
     teclas[e.key.toLowerCase()] = true;
@@ -91,11 +115,12 @@ document.addEventListener("keyup", e => {
     teclas[e.key.toLowerCase()] = false;
 });
 
-/* ===========================
+/* ==========================
    TIEMPO
-=========================== */
+========================== */
 
 function actualizarTiempo() {
+
     if (juegoPausado) return;
 
     if (tiempoTotal <= 0) {
@@ -112,17 +137,17 @@ function actualizarTiempo() {
     tiempoTotal--;
 }
 
-/* ===========================
+/* ==========================
    PUNTAJE
-=========================== */
+========================== */
 
 function actualizarPuntaje() {
     puntajeTexto.innerText = puntaje;
 }
 
-/* ===========================
+/* ==========================
    GENERAR ANIMAL
-=========================== */
+========================== */
 
 function generarAnimal() {
 
@@ -185,9 +210,9 @@ function generarAnimal() {
     panel.classList.add("visible");
 }
 
-/* ===========================
+/* ==========================
    MOVER ANIMAL
-=========================== */
+========================== */
 
 function moverAnimal() {
 
@@ -213,9 +238,9 @@ function moverAnimal() {
     }
 }
 
-/* ===========================
+/* ==========================
    COLISIÓN
-=========================== */
+========================== */
 
 function detectarColision() {
 
@@ -240,9 +265,9 @@ function detectarColision() {
     }
 }
 
-/* ===========================
-   PANEL COLISIÓN
-=========================== */
+/* ==========================
+   COLISIÓN PANEL
+========================== */
 
 function mostrarColision() {
 
@@ -266,41 +291,37 @@ opcion2.onclick = () => {
     cerrarColision();
 };
 
-/* ===========================
-   ACCIONES DE AYUDA
-=========================== */
+/* ==========================
+   AYUDA
+========================== */
 
 accion1.onclick = () => {
     puntaje += 10;
-    alert("🛑 Has señalizado la vía y colocado conos.");
+    alert("🛑 Has señalizado la vía.");
     cerrarAyuda();
 };
 
 accion2.onclick = () => {
     puntaje += 15;
-    alert("📞 Has llamado a las autoridades ambientales.");
+    alert("📞 Llamaste a autoridades.");
     cerrarAyuda();
 };
 
 accion3.onclick = () => {
     puntaje += 20;
-    alert("🚑 Se solicitó apoyo veterinario.");
+    alert("🚑 Ayuda veterinaria solicitada.");
     cerrarAyuda();
 };
 
 function cerrarAyuda() {
     ayudaPanel.classList.add("oculto");
-
     enColision = false;
     juegoPausado = false;
-
     actualizarPuntaje();
 }
 
 function cerrarColision() {
-
     colisionPanel.classList.add("oculto");
-
     enColision = false;
     juegoPausado = false;
 
@@ -309,18 +330,62 @@ function cerrarColision() {
     actualizarPuntaje();
 }
 
-/* ===========================
+/* ==========================
    FINAL
-=========================== */
+========================== */
 
 function finalizarSimulacion() {
     alert("SIMULACIÓN FINALIZADA\n\nPUNTAJE: " + puntaje);
     location.reload();
 }
 
-/* ===========================
-   LOOP PRINCIPAL
-=========================== */
+function activarLluvia() {
+
+    const lluvia = document.getElementById("lluvia");
+    if (!lluvia) return;
+
+    lluvia.innerHTML = ""; // limpiar
+
+    for (let i = 0; i < 150; i++) {
+
+        const gota = document.createElement("div");
+        gota.classList.add("gota");
+
+        // posición inicial REAL
+        gota.style.left = Math.random() * window.innerWidth + "px";
+        gota.style.top = Math.random() * window.innerHeight + "px";
+
+        // duración distinta
+        const duracion = 0.6 + Math.random() * 0.8;
+        gota.style.animationDuration = duracion + "s";
+
+        // tamaño variable
+        const altura = 10 + Math.random() * 15;
+        gota.style.height = altura + "px";
+
+        lluvia.appendChild(gota);
+    }
+
+    // 🔁 lluvia continua
+    setInterval(() => {
+        const gota = document.createElement("div");
+        gota.classList.add("gota");
+
+        gota.style.left = Math.random() * window.innerWidth + "px";
+        gota.style.top = "-20px";
+        gota.style.animationDuration = (0.6 + Math.random()) + "s";
+
+        lluvia.appendChild(gota);
+
+        // eliminar gotas viejas
+        setTimeout(() => gota.remove(), 2000);
+
+    }, 120);
+}
+
+/* ==========================
+   LOOP
+========================== */
 
 function actualizar() {
 
@@ -329,12 +394,8 @@ function actualizar() {
     if (juegoPausado) return;
 
     if (teclas["w"]) aceleracion += fuerzaMotor;
-
-    if (teclas["s"] && velocidad > 0)
-        aceleracion -= fuerzaFreno;
-
-    if (!teclas["w"] && !teclas["s"] && velocidad > 0)
-        aceleracion -= friccion;
+    if (teclas["s"] && velocidad > 0) aceleracion -= fuerzaFreno;
+    if (!teclas["w"] && !teclas["s"] && velocidad > 0) aceleracion -= friccion;
 
     velocidad += aceleracion;
 
@@ -381,17 +442,55 @@ function actualizar() {
     detectarColision();
 }
 
-/* ===========================
-   EVENTOS EXTRA
-=========================== */
+/* ==========================
+   EVENTOS
+========================== */
 
 document.getElementById("finalizar").addEventListener("click", function () {
     window.location.href = "/resultado";
 });
 
-/* ===========================
+document.addEventListener("DOMContentLoaded", () => {
+
+    const boton = document.getElementById("finalizar");
+
+    if (!boton) return;
+
+    boton.addEventListener("click", async () => {
+
+        const confirmar = confirm("¿Finalizar simulación?");
+
+        if (!confirmar) return;
+
+        const data = {
+            puntaje: document.getElementById("puntaje")?.innerText || 0,
+            tiempo: document.getElementById("tiempo")?.innerText || 0,
+            velocidad: document.getElementById("velocidad")?.innerText || 0,
+
+            animales: window.animalesDetectados || 0,
+            frenadas: window.frenadas || 0,
+            atropellados: window.atropellados || 0,
+            salvados: window.salvados || 0
+        };
+
+        // 🔥 1. primero guardar en Flask
+        await fetch("/guardar_resultado", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams(data)
+        });
+
+        // 🔥 2. luego ir a resultado
+        window.location.href = "/resultado";
+    });
+
+});
+
+/* ==========================
    INICIO
-=========================== */
+========================== */
 
 actualizarTiempo();
 actualizarPuntaje();

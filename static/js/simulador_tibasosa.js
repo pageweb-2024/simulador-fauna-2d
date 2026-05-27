@@ -393,6 +393,54 @@ function actualizar() {
     detectarColision();
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+
+    const boton = document.getElementById("finalizar");
+
+    if (!boton) return;
+
+    boton.addEventListener("click", async () => {
+
+        const confirmar = confirm("¿Finalizar simulación?");
+        if (!confirmar) return;
+
+        // 🔥 asegurar que window exista y valores sean números válidos
+        const animales = window.animalesDetectados ?? 0;
+        const frenadas = window.frenadas ?? 0;
+        const atropellados = window.atropellados ?? 0;
+        const salvados = window.salvados ?? 0;
+
+        const data = {
+            puntaje: Number(document.getElementById("puntaje")?.innerText || 0),
+            tiempo: document.getElementById("tiempo")?.innerText || 0,
+            velocidad: Number(document.getElementById("velocidad")?.innerText || 0),
+
+            animales: Number(animales),
+            frenadas: Number(frenadas),
+            atropellados: Number(atropellados),
+            salvados: Number(salvados)
+        };
+
+        console.log("DATOS ENVIADOS:", data);
+
+        try {
+            await fetch("/guardar_resultado", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams(data)
+            });
+
+            window.location.href = "/resultado";
+
+        } catch (error) {
+            console.error("Error enviando datos:", error);
+            alert("Error al guardar resultados");
+        }
+    });
+
+});
 /* ===========================
    EVENTOS
 =========================== */

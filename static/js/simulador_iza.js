@@ -381,6 +381,44 @@ function actualizar() {
     detectarColision();
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+
+    const boton = document.getElementById("finalizar");
+
+    if (!boton) return;
+
+    boton.addEventListener("click", async () => {
+
+        const confirmar = confirm("¿Finalizar simulación?");
+
+        if (!confirmar) return;
+
+        const data = {
+            puntaje: document.getElementById("puntaje")?.innerText || 0,
+            tiempo: document.getElementById("tiempo")?.innerText || 0,
+            velocidad: document.getElementById("velocidad")?.innerText || 0,
+
+            animales: window.animalesDetectados || 0,
+            frenadas: window.frenadas || 0,
+            atropellados: window.atropellados || 0,
+            salvados: window.salvados || 0
+        };
+
+        // 🔥 1. primero guardar en Flask
+        await fetch("/guardar_resultado", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams(data)
+        });
+
+        // 🔥 2. luego ir a resultado
+        window.location.href = "/resultado";
+    });
+
+});
+
 /* ===========================
    EVENTOS EXTRA
 =========================== */
