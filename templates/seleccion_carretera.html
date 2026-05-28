@@ -93,6 +93,34 @@
 
 </main>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+    
+        const cards = document.querySelectorAll(".card-carretera");
+    
+        cards.forEach(card => {
+    
+            card.addEventListener("click", function () {
+    
+                // quitar selección de todas
+                cards.forEach(c => c.classList.remove("seleccionado"));
+    
+                // marcar la seleccionada
+                this.classList.add("seleccionado");
+    
+                // activar el radio interno
+                const input = this.querySelector("input");
+                if (input) {
+                    input.checked = true;
+                }
+    
+            });
+    
+        });
+    
+    });
+    </script>
+
 </body>
 
 </html>

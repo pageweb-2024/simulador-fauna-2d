@@ -7,8 +7,7 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet"
-        href="{{ url_for('static', filename='css/seleccion_vehiculo.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/seleccion_vehiculo.css') }}">
 
     <title>Selección de vehículo</title>
 
@@ -30,8 +29,7 @@
                      AUTOMÓVIL
                 ==================================== -->
 
-                <div class="card-vehiculo flotante"
-                    onclick="abrirModal()">
+                <div class="card-vehiculo flotante" onclick="abrirModal()">
 
                     <img src="{{ url_for('static', filename='img/automovil.png') }}">
 
@@ -45,10 +43,7 @@
 
                 <label class="card-vehiculo">
 
-                    <input type="radio"
-                        name="vehiculo"
-                        value="motocicleta"
-                        hidden>
+                    <input type="radio" name="vehiculo" value="motocicleta" hidden>
 
                     <img src="{{ url_for('static', filename='img/motocicleta.png') }}">
 
@@ -56,36 +51,13 @@
 
                 </label>
 
-                <!-- ===================================
-                     BICICLETA
-                ==================================== -->
-
-                <label class="card-vehiculo">
-
-                    <input type="radio"
-                        name="vehiculo"
-                        value="bicicleta"
-                        hidden>
-
-                    <img src="{{ url_for('static', filename='img/ciclista.png') }}">
-
-                    <h2>Bicicleta</h2>
-
-                </label>
-
             </div>
 
-            <!-- ===================================
-                 INPUT OCULTO AUTOMÓVIL
-            ==================================== -->
+            <!-- INPUT OCULTO AUTOMÓVIL -->
 
-            <input type="hidden"
-                name="vehiculo_auto"
-                id="vehiculoSeleccionado">
+            <input type="hidden" name="vehiculo_auto" id="vehiculoSeleccionado">
 
-            <!-- ===================================
-                 MODAL
-            ==================================== -->
+            <!-- MODAL -->
 
             <div id="modalVehiculo" class="modal">
 
@@ -97,8 +69,7 @@
 
                         <!-- PARTICULAR -->
 
-                        <div class="opcion"
-                            onclick="seleccionarVehiculo('particular')">
+                        <div class="opcion" onclick="seleccionarVehiculo('particular')">
 
                             <img src="{{ url_for('static', filename='img/particular.png') }}">
 
@@ -108,8 +79,7 @@
 
                         <!-- CAMIONETA -->
 
-                        <div class="opcion"
-                            onclick="seleccionarVehiculo('camioneta')">
+                        <div class="opcion" onclick="seleccionarVehiculo('camioneta')">
 
                             <img src="{{ url_for('static', filename='img/camioneta.png') }}">
 
@@ -119,11 +89,7 @@
 
                     </div>
 
-                    <!-- BOTÓN CERRAR -->
-
-                    <button type="button"
-                        class="cerrar"
-                        onclick="cerrarModal()">
+                    <button type="button" class="cerrar" onclick="cerrarModal()">
 
                         Cerrar
 
@@ -133,26 +99,17 @@
 
             </div>
 
-            <!-- ===================================
-                 BOTONES
-            ==================================== -->
+            <!-- BOTONES -->
 
             <div class="botones">
 
-                <!-- CONTINUAR -->
-
-                <button type="submit"
-                    class="btn-continuar">
+                <button type="submit" class="btn-continuar">
 
                     Continuar
 
                 </button>
 
-                <!-- VOLVER -->
-
-                <button type="button"
-                    class="btn-volver"
-                    onclick="window.location.href='/seleccion_carretera'">
+                <button type="button" class="btn-volver" onclick="window.location.href='/seleccion_carretera'">
 
                     Volver
 
@@ -166,38 +123,18 @@
 
     <script>
 
-        // ======================================
-        // ABRIR MODAL
-        // ======================================
-
         function abrirModal() {
-
             document.getElementById("modalVehiculo").style.display = "flex";
         }
 
-        // ======================================
-        // CERRAR MODAL
-        // ======================================
-
         function cerrarModal() {
-
             document.getElementById("modalVehiculo").style.display = "none";
         }
 
-        // ======================================
-        // SELECCIONAR AUTO
-        // ======================================
-
         function seleccionarVehiculo(tipo) {
-
             document.getElementById("vehiculoSeleccionado").value = tipo;
-
             cerrarModal();
         }
-
-        // ======================================
-        // VALIDAR FORMULARIO
-        // ======================================
 
         document.querySelector("form").addEventListener("submit", function (e) {
 
@@ -207,35 +144,37 @@
             const autoSeleccionado =
                 document.getElementById("vehiculoSeleccionado").value;
 
-            // SI NO HAY NADA SELECCIONADO
-
             if (!radioSeleccionado && autoSeleccionado === "") {
-
                 e.preventDefault();
-
                 alert("Selecciona un vehículo");
             }
 
-            // SI ELIGE AUTOMÓVIL
-
             if (autoSeleccionado !== "") {
 
-                // ELIMINAR RADIOS
                 document.querySelectorAll('input[name="vehiculo"]')
                     .forEach(r => r.disabled = true);
 
-                // CREAR INPUT REAL
                 const input = document.createElement("input");
 
                 input.type = "hidden";
-
                 input.name = "vehiculo";
-
                 input.value = autoSeleccionado;
 
                 this.appendChild(input);
             }
 
+        });
+
+        document.querySelectorAll(".card-vehiculo").forEach(card => {
+            card.addEventListener("click", function () {
+
+                // quitar selección a todos
+                document.querySelectorAll(".card-vehiculo")
+                    .forEach(c => c.classList.remove("seleccionado"));
+
+                // agregar selección al actual
+                this.classList.add("seleccionado");
+            });
         });
 
     </script>

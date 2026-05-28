@@ -1,94 +1,90 @@
-.contenedor-instrucciones{
+/* =========================
+   INSTRUCCIONES - ESTILO GENERAL
+   ========================= */
 
-    width:80%;
-
-    margin:auto;
-
-    padding:40px;
+   body {
+    font-family: sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f4f6f8;
 }
 
-.contenedor-instrucciones h1{
-
-    text-align:center;
-
-    margin-bottom:40px;
+/* Contenedor principal */
+.contenedor-instrucciones {
+    width: 80%;
+    margin: auto;
+    padding: 40px;
 }
 
-.card{
-
-    width:80%;
-
-    margin:auto;
-
-    margin-top:40px;
-
-    padding:40px;
-
-    background:#2fab2f;
-
-    border-radius:20px;
+/* Título principal */
+.contenedor-instrucciones h1 {
+    text-align: center;
+    margin-bottom: 40px;
+    font-size: 2rem;
+    color: #333;
 }
 
-.card h2{
-
-    margin-bottom:15px;
+/* Tarjeta de instrucciones */
+.card {
+    width: 80%;
+    margin: 40px auto 0 auto;
+    padding: 40px;
+    background: #2fab2f;
+    border-radius: 20px;
+    color: rgb(0, 0, 0);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 }
 
-.card p{
-
-    line-height:1.6;
+/* Título dentro de la card */
+.card h2 {
+    margin-bottom: 15px;
 }
 
-.card ul{
-
-    margin-left:20px;
+/* Texto */
+.card p {
+    line-height: 1.6;
 }
 
-.card li{
-
-    margin-bottom:10px;
+/* Lista */
+.card ul {
+    margin-left: 20px;
+    padding-left: 10px;
 }
 
-.volver{
-
-    display:block;
-
-    margin:auto;
-
-    margin-top:30px;
+.card li {
+    margin-bottom: 10px;
 }
 
-.botones{
-
-    display:flex;
-
-    justify-content:center;
-
-    margin-top:30px;
+/* Botón volver */
+.volver {
+    display: block;
+    margin: 30px auto 0 auto;
+    text-align: center;
 }
 
-.botones button{
-
-    padding:15px 30px;
-
-    border:none;
-
-    border-radius:10px;
-
-    cursor:pointer;
-
-    font-size:1rem;
-
-    font-weight:bold;
-
-    background:#4caf50;
-
-    color:white;
-
-    transition:0.3s;
+/* Contenedor de botones */
+.botones {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+    gap: 15px;
 }
 
-.botones button:hover{
+/* Botones */
+.botones button {
+    padding: 15px 30px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: bold;
+    background: #4caf50;
+    color: rgb(0, 0, 0);
+    transition: 0.3s ease;
+}
 
-    transform:scale(1.05);
+/* Hover */
+.botones button:hover {
+    transform: scale(1.05);
+    background: #43a047;
 }
