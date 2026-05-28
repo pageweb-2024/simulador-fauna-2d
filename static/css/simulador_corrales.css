@@ -1,3 +1,7 @@
+/* ==========================
+   RESET
+========================== */
+
 *{
     margin:0;
     padding:0;
@@ -14,7 +18,7 @@ html,body{
 }
 
 /* ==========================
-   CONTENEDOR PRINCIPAL
+   SIMULADOR
 ========================== */
 
 .simulador{
@@ -32,9 +36,8 @@ html,body{
 .carretera{
     position:absolute;
     inset:0;
-    width:100vw;
-    height:100vh;
-    overflow:hidden;
+    width:100%;
+    height:100%;
 }
 
 .mapa-container{
@@ -78,7 +81,7 @@ html,body{
 }
 
 /* ==========================
-   BARRA HUD INFERIOR
+   HUD (ARREGLADO)
 ========================== */
 
 .hud{
@@ -86,19 +89,23 @@ html,body{
     bottom:0;
     left:0;
     width:100%;
-    height:180px;
-    padding:15px 40px;
+    height:140px;
+
+    padding:12px 25px;
+
     display:flex;
     justify-content:space-between;
     align-items:center;
-    background:rgba(8,15,30,.95);
-    border-top:4px solid #374151;
-    backdrop-filter:blur(10px);
+
+    background:linear-gradient(to top, rgba(0,0,0,0.92), rgba(8,15,30,0.85));
+    border-top:2px solid #374151;
+    backdrop-filter:blur(12px);
+
     z-index:100;
 }
 
 /* ==========================
-   TACÓMETRO
+   TACÓMETRO (NO MODIFICADO)
 ========================== */
 
 .tacometro{
@@ -173,31 +180,33 @@ html,body{
 }
 
 /* ==========================
-   TIEMPO Y PUNTAJE
+   INFO (TIEMPO / PUNTAJE ARREGLADO)
 ========================== */
 
 .info{
-    width:240px;
-    height:110px;
-    background:rgba(17,24,39,.95);
-    border:2px solid #374151;
-    border-radius:18px;
+    width:170px;
+    height:85px;
+
+    background:rgba(17,24,39,.92);
+    border:1px solid #374151;
+    border-radius:14px;
+
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
+
     text-align:center;
-    box-shadow:0 0 18px rgba(0,0,0,.45);
 }
 
 .info h3{
+    font-size:14px;
     color:#60a5fa;
-    margin-bottom:8px;
-    font-size:22px;
+    margin-bottom:4px;
 }
 
 .dato{
-    font-size:52px;
+    font-size:30px;
     font-weight:bold;
     color:white;
 }
@@ -208,32 +217,32 @@ html,body{
 
 .panel{
     position:absolute;
-    top:20px;
-    right:20px;
-    width:360px;
-    height:calc(100vh - 220px);
+    top:15px;
+    right:15px;
+
+    width:320px;
+    height:calc(100vh - 170px);
+
     background:rgba(255,255,255,.97);
     color:#111827;
-    padding:25px;
+
+    padding:20px;
+
     display:flex;
     flex-direction:column;
-    gap:18px;
+    gap:14px;
+
     overflow-y:auto;
-    border-radius:20px;
-    box-shadow:0 20px 50px rgba(0,0,0,.35);
+
+    border-radius:16px;
+    box-shadow:0 15px 40px rgba(0,0,0,.35);
+
     z-index:9999;
-    transition:.35s ease;
 }
 
+/* ocultar */
 .oculto{
-    opacity:0;
-    transform:translateX(420px);
-    pointer-events:none;
-}
-
-.visible{
-    opacity:1;
-    transform:translateX(0);
+    display:none;
 }
 
 /* ==========================
@@ -242,82 +251,74 @@ html,body{
 
 .panel h1{
     color:#dc2626;
-    font-size:28px;
-    text-align:center;
-}
-
-.panel h2,
-.panel p{
+    font-size:26px;
     text-align:center;
 }
 
 .senal{
-    width:120px;
+    width:100px;
     margin:auto;
 }
 
 .riesgo{
     background:#fee2e2;
     color:#dc2626;
-    padding:12px;
-    border-radius:12px;
+    padding:10px;
+    border-radius:10px;
     font-weight:bold;
     text-align:center;
 }
 
-.animal-alerta{
-    display:flex;
-    justify-content:center;
-}
-
 .animal-circulo{
-    width:150px;
-    height:150px;
+    width:120px;
+    height:120px;
     border-radius:50%;
     background:#f3f4f6;
     display:flex;
     justify-content:center;
     align-items:center;
     border:4px solid #d1d5db;
+    margin:auto;
 }
 
 .animal-img{
-    width:110px;
-    height:110px;
+    width:90px;
+    height:90px;
     object-fit:contain;
 }
 
 /* ==========================
-   OPCIONES
+   OPCIONES PANEL
 ========================== */
 
 .item-opcion{
     display:flex;
     justify-content:space-between;
-    padding:12px;
+    padding:10px;
     background:#f3f4f6;
     border-radius:10px;
     font-weight:bold;
 }
 
 /* ==========================
-   BOTÓN
+   BOTÓN FINALIZAR
 ========================== */
 
 .btn-finalizar{
     margin-top:auto;
-    padding:18px;
+    padding:16px;
     border:none;
-    border-radius:14px;
+    border-radius:12px;
     background:#dc2626;
     color:white;
-    font-size:20px;
+    font-size:18px;
     font-weight:bold;
     cursor:pointer;
 }
 
 .btn-finalizar:hover{
     background:#b91c1c;
+    transform:scale(1.03);
 }
 
 /* ==========================
@@ -336,362 +337,32 @@ html,body{
     border-radius:12px;
     text-align:center;
     z-index:10000;
-    box-shadow:0 0 25px rgba(0,0,0,.7);
-}
-
-/* ===== PANTALLA FLOTANTE DE EVENTOS ===== */
-#pantalla-flotante {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    
-    width: 420px;
-    min-height: 220px;
-    
-    background: rgba(0, 0, 0, 0.92);
-    border-radius: 20px;
-    
-    padding: 30px;
-    
-    display: none; /* aparece con JS */
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    
-    z-index: 99999;
-
-    box-shadow: 
-        0 0 30px rgba(0,0,0,0.8),
-        0 0 60px rgba(255,0,0,0.25);
-
-    border: 2px solid rgba(255,255,255,0.08);
-
-    animation: aparecerPopup 0.35s ease;
-    backdrop-filter: blur(8px);
-
-    text-align: center;
-}
-
-/* Mostrar */
-#pantalla-flotante.activa {
-    display: flex;
-}
-
-/* Título */
-#pantalla-flotante h2 {
-    font-size: 2rem;
-    color: #ff3b3b;
-    margin-bottom: 15px;
-    font-weight: 900;
-    text-transform: uppercase;
-}
-
-/* Texto */
-#pantalla-flotante p {
-    font-size: 1.2rem;
-    color: white;
-    margin-bottom: 20px;
-    line-height: 1.4;
-}
-
-/* Botones */
-#pantalla-flotante button {
-    padding: 12px 22px;
-    margin: 8px;
-    border: none;
-    border-radius: 12px;
-    font-size: 1rem;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.25s ease;
-}
-
-/* Botón ayudar */
-#pantalla-flotante .btn-ayudar {
-    background: #22c55e;
-    color: white;
-}
-
-#pantalla-flotante .btn-ayudar:hover {
-    background: #16a34a;
-    transform: scale(1.08);
-}
-
-/* Botón huir */
-#pantalla-flotante .btn-huir {
-    background: #ef4444;
-    color: white;
-}
-
-#pantalla-flotante .btn-huir:hover {
-    background: #dc2626;
-    transform: scale(1.08);
-}
-
-/* Animación */
-@keyframes aparecerPopup {
-    from {
-        opacity: 0;
-        transform: translate(-50%, -50%) scale(0.75);
-    }
-    to {
-        opacity: 1;
-        transform: translate(-50%, -50%) scale(1);
-    }
-}
-
-/* Fondo oscuro detrás */
-#overlay-evento {
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.55);
-    z-index: 99998;
-    display: none;
-}
-
-#overlay-evento.activo {
-    display: block;
 }
 
 /* ==========================
-   VENTANA FLOTANTE COLISIÓN
-========================== */
-
-.colision{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    width:500px;
-    max-width:90%;
-    background:rgba(15,23,42,0.97);
-    border:4px solid #ef4444;
-    border-radius:25px;
-    padding:35px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    z-index:9999;
-    box-shadow:0 0 40px rgba(239,68,68,0.45);
-    animation:popupColision .35s ease;
-}
-
-/* Ocultar panel */
-.oculto{
-    display:none;
-}
-
-/* Título */
-.colision h2{
-    font-size:32px;
-    font-weight:900;
-    color:#ef4444;
-    margin-bottom:20px;
-}
-
-/* Texto */
-.colision p{
-    font-size:22px;
-    color:white;
-    margin-bottom:30px;
-    line-height:1.4;
-}
-
-/* Botones */
-.colision button{
-    width:230px;
-    padding:15px;
-    margin:10px 0;
-    border:none;
-    border-radius:15px;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.25s;
-}
-
-/* Botón 1 */
-#opcion1{
-    background:#22c55e;
-    color:white;
-}
-
-/* Botón 2 */
-#opcion2{
-    background:#ef4444;
-    color:white;
-}
-
-/* Hover */
-.colision button:hover{
-    transform:scale(1.05);
-    filter:brightness(1.1);
-}
-
-/* Fondo oscuro detrás */
-.colision::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.7);
-    z-index:-1;
-}
-
-/* Animación */
-@keyframes popupColision{
-    from{
-        opacity:0;
-        transform:translate(-50%, -50%) scale(0.7);
-    }
-    to{
-        opacity:1;
-        transform:translate(-50%, -50%) scale(1);
-    }
-}
-
-
-/* ==========================
-   PANEL AYUDA AL ANIMAL
-========================== */
-
-#ayudaPanel{
-    position:fixed;
-    top:50%;
-    left:50%;
-    transform:translate(-50%, -50%);
-    width:550px;
-    max-width:92%;
-    background:rgba(15,23,42,0.97);
-    border:4px solid #22c55e;
-    border-radius:25px;
-    padding:35px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    text-align:center;
-    z-index:10001;
-    box-shadow:0 0 45px rgba(34,197,94,0.45);
-    animation:popupAyuda .35s ease;
-}
-
-#ayudaPanel h2{
-    font-size:30px;
-    font-weight:900;
-    color:#22c55e;
-    margin-bottom:20px;
-}
-
-#ayudaPanel p{
-    font-size:20px;
-    color:white;
-    margin-bottom:25px;
-}
-
-/* Botones de ayuda */
-#ayudaPanel button{
-    width:100%;
-    padding:16px;
-    margin:10px 0;
-    border:none;
-    border-radius:16px;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-    transition:.25s;
-    color:white;
-}
-
-/* Acción 1 */
-#accion1{
-    background:#f59e0b;
-}
-
-/* Acción 2 */
-#accion2{
-    background:#3b82f6;
-}
-
-/* Acción 3 */
-#accion3{
-    background:#22c55e;
-}
-
-/* Hover */
-#ayudaPanel button:hover{
-    transform:scale(1.04);
-    filter:brightness(1.1);
-}
-
-/* Fondo oscuro */
-#ayudaPanel::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,0.75);
-    z-index:-1;
-}
-
-/* Animación */
-@keyframes popupAyuda{
-    from{
-        opacity:0;
-        transform:translate(-50%, -50%) scale(0.7);
-    }
-    to{
-        opacity:1;
-        transform:translate(-50%, -50%) scale(1);
-    }
-}
-
-/* ==========================
-   🌧️ LLUVIA FIX (ARREGLADO REAL)
+   LLUVIA
 ========================== */
 
 #lluvia{
-    position:fixed;
-    top:0;
-    left:0;
-    width:100vw;
-    height:100vh;
+    position:absolute;
+    inset:0;
+    width:100%;
+    height:100%;
+    background-image:url("/static/img/lluvia.gif");
+    background-size:cover;
+    background-position:center;
+    display:none;
     pointer-events:none;
-    overflow:hidden;
-
-    /* IMPORTANTE: más bajo que UI pero encima del fondo */
-    z-index:2;
-
-    display:block;
+    z-index:40;
+    opacity:.65;
 }
 
-/* GOTAS */
-.gota{
-    position:absolute;
-    width:2px;
-    height:20px;
-    background:rgba(255,255,255,0.8);
-    opacity:0.7;
+/* ==========================
+   CAPAS
+========================== */
 
-    /* IMPORTANTE: nombre único para evitar conflictos */
-    animation:lluvia_caer linear infinite;
-}
-
-/* ANIMACIÓN CORREGIDA */
-@keyframes lluvia_caer{
-    0%{
-        transform:translateY(-120px);
-    }
-    100%{
-        transform:translateY(100vh);
-    }
-}
-
-.gota{
-    position:absolute;
-    top:-20px;
-    width:2px;
-    height:15px;
-    background:rgba(255,255,255,0.8);
-    opacity:0.7;
-    animation:caida linear forwards;
-}
+.fondo{ z-index:1; }
+.animal-movimiento{ z-index:45; }
+.vehiculo{ z-index:50; }
+.hud{ z-index:100; }
+.panel{ z-index:999; }

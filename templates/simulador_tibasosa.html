@@ -2,11 +2,14 @@
 <html lang="es">
 
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Simulador Tibasosa</title>
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/simulador_tibasosa.css') }}">
+
 </head>
 
 <body>
@@ -15,14 +18,15 @@
 
         <!-- ===========================
          CARRETERA
-    =========================== -->
+        =========================== -->
 
         <section class="carretera">
 
             <div class="mapa-container">
 
                 <!-- MAPA -->
-                <img id="mapa" class="fondo" src="{{ url_for('static', filename='img/Sogamoso_tibasosa.png') }}"
+                <img id="mapa" class="fondo"
+                    src="{{ url_for('static', filename='img/Sogamoso_tibasosa.png') }}"
                     alt="Mapa Tibasosa">
 
                 <!-- LLUVIA -->
@@ -32,14 +36,15 @@
                 <img id="animalMovimiento" class="animal-movimiento" src="" alt="Animal">
 
                 <!-- VEHÍCULO -->
-                <img id="vehiculo" class="vehiculo" src="{{ url_for('static', filename='img/' ~ vehiculo ~ '.png') }}"
+                <img id="vehiculo" class="vehiculo"
+                    src="{{ url_for('static', filename='img/' ~ vehiculo ~ '.png') }}"
                     alt="Vehículo">
 
             </div>
 
             <!-- ===========================
              HUD
-        =========================== -->
+            =========================== -->
 
             <footer class="hud">
 
@@ -76,20 +81,26 @@
                     <div class="dato" id="puntaje">0</div>
                 </div>
 
+                <!-- BOTÓN FINALIZAR -->
+                <button class="btn-finalizar" id="finalizar" onclick="">
+                    Finalizar
+                </button>
+
             </footer>
 
         </section>
 
-
         <!-- ===========================
          PANEL ALERTA
-    =========================== -->
+        =========================== -->
 
         <aside id="panelAlerta" class="panel oculto">
 
             <h1>⚠ ¡PRECAUCIÓN!</h1>
 
-            <img class="senal" src="{{ url_for('static', filename='img/precaucion.png') }}" alt="Señal fauna">
+            <img class="senal"
+                src="{{ url_for('static', filename='img/precaucion.png') }}"
+                alt="Señal fauna">
 
             <h2 id="animalNombre">FAUNA EN LA VÍA</h2>
 
@@ -107,7 +118,7 @@
                 </div>
             </div>
 
-            <!-- CONFIG -->
+            <!-- CONFIGURACIÓN -->
             <div class="opciones-simulador">
 
                 <h2>CONFIGURACIÓN</h2>
@@ -123,29 +134,19 @@
                 </div>
 
                 <div class="item-opcion">
-                    🌦️ Clima
-                    <span id="climaMostrado">Cargando...</span>
-                </div>
-
-                <div class="item-opcion">
                     🎚️ Dificultad
-                    <span id="dificultadMostrada">Cargando...</span>
+                    <span id="dificultadMostrada">{{ opcion }}</span>
                 </div>
 
             </div>
-
-            <button class="btn-finalizar" id="finalizar">
-                Finalizar
-            </button>
 
         </aside>
 
     </main>
 
-
     <!-- ===========================
      PANEL COLISIÓN
-=========================== -->
+    =========================== -->
 
     <div id="colisionPanel" class="colision oculto">
 
@@ -158,10 +159,9 @@
 
     </div>
 
-
     <!-- ===========================
      PANEL AYUDA
-=========================== -->
+    =========================== -->
 
     <div id="ayudaPanel" class="colision oculto">
 
@@ -174,7 +174,6 @@
         <button id="accion3">🚑 Solicitar apoyo veterinario</button>
 
     </div>
-
 
     <!-- DATOS FLASK -->
     <script>
