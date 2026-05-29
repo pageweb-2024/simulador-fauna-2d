@@ -23,6 +23,36 @@ const accion3 = document.getElementById("accion3");
 const animal = document.getElementById("animalMovimiento");
 const lluvia = document.getElementById("lluvia");
 
+/* ==========================
+   SONIDOS
+========================== */
+
+const sonidoAcelerar = new Audio("/static/audio/aceleracion.mp3");
+const sonidoFrenar = new Audio("/static/audio/frenado.mp3");
+const sonidoChoque = new Audio("/static/audio/colicion.mp3");
+
+sonidoAcelerar.loop = true;
+sonidoFrenar.loop = true;
+
+sonidoAcelerar.volume = 0.5;
+sonidoFrenar.volume = 0.6;
+sonidoChoque.volume = 1;
+
+/* ==========================
+   CONFIGURAR DIFICULTAD
+========================== */
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const dificultad = localStorage.getItem("dificultad");
+
+    if (dificultad === "dificil") {
+        localStorage.setItem("tiempoAparicion", "10000");
+    } else {
+        localStorage.setItem("tiempoAparicion", "20000");
+    }
+});
+
 /* ===========================
    CONTADORES
 =========================== */
@@ -81,7 +111,8 @@ let animalDX = 0;
 let animalActivo = false;
 
 let velocidadAnimal = 4;
-let intervaloAnimal = 20000;
+
+let intervaloAnimal = parseInt(localStorage.getItem("tiempoAparicion")) || 20000;
 
 /* ===========================
    TECLAS
@@ -139,7 +170,6 @@ function generarAnimal() {
     if (!animalesFirebase?.length) return;
 
     animalActivo = true;
-
     animalesDetectados++;
 
     const a = animalesFirebase[
@@ -201,6 +231,8 @@ function detectarColision() {
         r1.bottom > r2.top;
 
     if (choque && velocidad > 20 && !enColision) {
+        sonidoChoque.play();
+
         atropellados++;
         enColision = true;
         animalActivo = false;
@@ -243,7 +275,7 @@ accion2.onclick = () => { puntaje += 15; cerrarTodo(); };
 accion3.onclick = () => { puntaje += 20; cerrarTodo(); };
 
 /* ===========================
-   FINAL (ARREGLADO)
+   FINAL
 =========================== */
 
 async function finalizar() {
@@ -276,20 +308,16 @@ async function finalizar() {
 }
 
 /* ===========================
-   🔥 BOTÓN FINAL (ARREGLO REAL)
+   BOTÓN FINALIZAR
 =========================== */
 
 document.addEventListener("DOMContentLoaded", () => {
 
     const btn = document.getElementById("finalizar");
 
-    if (!btn) {
-        console.log("❌ Botón finalizar no encontrado");
-        return;
-    }
+    if (!btn) return;
 
     btn.addEventListener("click", () => {
-        console.log("🔥 Finalizar presionado");
         finalizar();
     });
 
@@ -304,8 +332,27 @@ function loop() {
 
     if (juegoPausado) return;
 
-    if (teclas["w"]) aceleracion += fuerzaMotor;
-    if (teclas["s"]) aceleracion -= fuerzaFreno;
+    if (teclas["w"]) {
+        aceleracion += fuerzaMotor;
+
+        if (sonidoAcelerar.paused) {
+            sonidoAcelerar.play();
+        }
+    } else {
+        sonidoAcelerar.pause();
+        sonidoAcelerar.currentTime = 0;
+    }
+
+    if (teclas["s"]) {
+        aceleracion -= fuerzaFreno;
+
+        if (sonidoFrenar.paused) {
+            sonidoFrenar.play();
+        }
+    } else {
+        sonidoFrenar.pause();
+        sonidoFrenar.currentTime = 0;
+    }
 
     if (!teclas["w"] && !teclas["s"]) {
         aceleracion -= friccion;
