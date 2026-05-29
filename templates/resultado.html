@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultados</title>
+
     <link rel="stylesheet" href="{{ url_for('static', filename='css/resultado.css') }}">
 </head>
 
@@ -12,31 +13,25 @@
 
     <div class="contenedor">
 
-        <h1>RESULTADOS <br> DE LA PRUEBA</h1>
+        <h1>RESULTADOS<br>DE LA PRUEBA</h1>
 
-        <div class="formatos">
+        <!-- ICONO EXCEL CENTRADO -->
+        <div class="excel-container">
+            <a href="/descargar_excel">
+                <img src="{{ url_for('static', filename='img/excel.png') }}" alt="Excel">
+            </a>
+        </div>
 
-            <!-- EXCEL -->
-            <div class="opcion">
-                <a href="/descargar_excel" class="btn">
-                    <img src="{{ url_for('static', filename='img/excel.png') }}" alt="Excel">
-                </a>
+        <!-- BOTONES -->
+        <div class="botones">
 
-                <button onclick="window.location.href='/'">
-                    REINICIAR
-                </button>
-            </div>
+            <button onclick="window.location.href='/registro'">
+                REINICIAR
+            </button>
 
-            <!-- WORD -->
-            <div class="opcion">
-                <a href="/descargar_word" class="btn">
-                    <img src="{{ url_for('static', filename='img/word.png') }}" alt="Word">
-                </a>
-
-                <button onclick="window.location.href='/'">
-                    FINALIZAR
-                </button>
-            </div>
+            <button onclick="window.location.href='/'">
+                FINALIZAR
+            </button>
 
         </div>
 

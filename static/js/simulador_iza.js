@@ -21,19 +21,55 @@ const accion2 = document.getElementById("accion2");
 const accion3 = document.getElementById("accion3");
 
 const animal = document.getElementById("animalMovimiento");
+const lluvia = document.getElementById("lluvia");
 
-console.log("Animales Firebase:", animalesFirebase);
+/* ===========================
+   CONTADORES
+=========================== */
 
-panel.classList.add("oculto");
-colisionPanel.classList.add("oculto");
-ayudaPanel.classList.add("oculto");
+let animalesDetectados = 0;
+let frenadas = 0;
+let atropellados = 0;
+let salvados = 0;
 
 /* ===========================
    ESTADO
 =========================== */
 
+vehiculo.style.position = "absolute";
+vehiculo.style.zIndex = "20000";
+vehiculo.style.left = "50%";
+vehiculo.style.top = "48%";
+
+mapa.style.position = "absolute";
+
+animal.style.position = "absolute";
+animal.style.zIndex = "9999";
+
+/* ===========================
+   VARIABLES
+=========================== */
+
 let juegoPausado = false;
 let enColision = false;
+let tiempoTotal = 600;
+let puntaje = 0;
+
+let x = window.innerWidth * 0.5;
+let y = window.innerHeight * 0.48;
+
+const limiteIzq = window.innerWidth * 0.39;
+const limiteDer = window.innerWidth * 0.61;
+
+let velocidad = 0;
+let aceleracion = 0;
+let mapaY = -100;
+
+const velocidadMax = 160;
+const fuerzaMotor = 0.35;
+const fuerzaFreno = 1.5;
+const friccion = 0.05;
+const sensibilidad = 0.08;
 
 /* ===========================
    ANIMAL
@@ -42,46 +78,16 @@ let enColision = false;
 let animalX = 0;
 let animalY = 0;
 let animalDX = 0;
-let animalDY = 0;
 let animalActivo = false;
+
 let velocidadAnimal = 4;
-
-/* ===========================
-   VEHÍCULO
-=========================== */
-
-let x = window.innerWidth * 0.50;
-let y = window.innerHeight * 0.60;
-
-const limiteIzquierdo = window.innerWidth * 0.39;
-const limiteDerecho = window.innerWidth * 0.61;
-
-let velocidad = 0;
-let aceleracion = 0;
-let mapaY = -100;
-
-/* ===========================
-   CONFIG
-=========================== */
-
-const velocidadMax = 160;
-const fuerzaMotor = 0.35;
-const fuerzaFreno = 1.5;
-const friccion = 0.05;
-const sensibilidadGiro = 0.05;
-
-/* ===========================
-   TIEMPO / PUNTAJE
-=========================== */
-
-let tiempoTotal = 600;
-let puntaje = 0;
-
-const teclas = {};
+let intervaloAnimal = 20000;
 
 /* ===========================
    TECLAS
 =========================== */
+
+const teclas = {};
 
 document.addEventListener("keydown", e => {
     teclas[e.key.toLowerCase()] = true;
@@ -92,6 +98,14 @@ document.addEventListener("keyup", e => {
 });
 
 /* ===========================
+   UI
+=========================== */
+
+panel.classList.add("oculto");
+colisionPanel.classList.add("oculto");
+ayudaPanel.classList.add("oculto");
+
+/* ===========================
    TIEMPO
 =========================== */
 
@@ -99,7 +113,7 @@ function actualizarTiempo() {
     if (juegoPausado) return;
 
     if (tiempoTotal <= 0) {
-        finalizarSimulacion();
+        finalizar();
         return;
     }
 
@@ -112,104 +126,61 @@ function actualizarTiempo() {
     tiempoTotal--;
 }
 
-/* ===========================
-   PUNTAJE
-=========================== */
-
 function actualizarPuntaje() {
     puntajeTexto.innerText = puntaje;
 }
 
 /* ===========================
-   GENERAR ANIMAL
+   ANIMAL
 =========================== */
 
 function generarAnimal() {
-
     if (juegoPausado || animalActivo) return;
-    if (!animalesFirebase || !animalesFirebase.length) return;
+    if (!animalesFirebase?.length) return;
 
     animalActivo = true;
+
+    animalesDetectados++;
 
     const a = animalesFirebase[
         Math.floor(Math.random() * animalesFirebase.length)
     ];
 
-    let rutaImagen = a.Imagen;
-
-    animal.src = `/static/img/imgiza/${rutaImagen}`;
-    animalPanel.src = `/static/img/imgiza/${rutaImagen}`;
+    animal.src = `/static/img/imgiza/${a.Imagen}`;
+    animalPanel.src = `/static/img/imgiza/${a.Imagen}`;
 
     animalNombre.innerText = a.Animal || "FAUNA";
-    animalDescripcion.innerText = a["Información"] || "Reduce la velocidad";
+    animalDescripcion.innerText = a["Información"] || "";
 
     animal.style.display = "block";
 
-    const lado = Math.floor(Math.random() * 4);
+    const desdeIzquierda = Math.random() > 0.5;
 
-    switch (lado) {
+    animalX = desdeIzquierda ? -150 : window.innerWidth + 150;
+    animalY = window.innerHeight * 0.42;
 
-        case 0:
-            animalX = window.innerWidth * 0.15;
-            animalY = window.innerHeight * (0.25 + Math.random() * 0.5);
-            animalDX = velocidadAnimal;
-            animalDY = (Math.random() - 0.5) * 2;
-            break;
-
-        case 1:
-            animalX = window.innerWidth * 0.85;
-            animalY = window.innerHeight * (0.25 + Math.random() * 0.5);
-            animalDX = -velocidadAnimal;
-            animalDY = (Math.random() - 0.5) * 2;
-            break;
-
-        case 2:
-            animalX = window.innerWidth * 0.20;
-            animalY = window.innerHeight * 0.15;
-            animalDX = velocidadAnimal;
-            animalDY = velocidadAnimal * 0.5;
-            break;
-
-        case 3:
-            animalX = window.innerWidth * 0.80;
-            animalY = window.innerHeight * 0.15;
-            animalDX = -velocidadAnimal;
-            animalDY = velocidadAnimal * 0.5;
-            break;
-    }
-
-    animal.style.left = animalX + "px";
-    animal.style.top = animalY + "px";
+    animalDX = desdeIzquierda ? velocidadAnimal : -velocidadAnimal;
 
     panel.classList.remove("oculto");
-    panel.classList.add("visible");
 }
 
 /* ===========================
-   MOVER ANIMAL
+   MOVIMIENTO ANIMAL
 =========================== */
 
 function moverAnimal() {
-
-    if (juegoPausado || !animalActivo) return;
+    if (!animalActivo || juegoPausado) return;
 
     animalX += animalDX;
-    animalY += animalDY;
 
     animal.style.left = animalX + "px";
     animal.style.top = animalY + "px";
 
-    if (
-        animalX < -150 ||
-        animalX > window.innerWidth + 150 ||
-        animalY < -150 ||
-        animalY > window.innerHeight + 150
-    ) {
+    if (animalX < -200 || animalX > window.innerWidth + 200) {
+        salvados++;
         animalActivo = false;
         animal.style.display = "none";
-
         panel.classList.add("oculto");
-        panel.classList.remove("visible");
     }
 }
 
@@ -218,8 +189,7 @@ function moverAnimal() {
 =========================== */
 
 function detectarColision() {
-
-    if (juegoPausado || !animalActivo || animal.style.display === "none") return;
+    if (!animalActivo) return;
 
     const r1 = vehiculo.getBoundingClientRect();
     const r2 = animal.getBoundingClientRect();
@@ -230,147 +200,144 @@ function detectarColision() {
         r1.top < r2.bottom &&
         r1.bottom > r2.top;
 
-    if (choque && !enColision && velocidad > 20) {
-
+    if (choque && velocidad > 20 && !enColision) {
+        atropellados++;
         enColision = true;
         animalActivo = false;
         animal.style.display = "none";
-
         mostrarColision();
     }
 }
 
 /* ===========================
-   PANEL COLISIÓN
+   COLISIÓN UI
 =========================== */
 
 function mostrarColision() {
-
     juegoPausado = true;
-
-    colisionTexto.innerText = "Atropellaste un animal. ¿Qué haces?";
-
-    opcion1.innerText = "Ayudar";
-    opcion2.innerText = "Huir";
-
     colisionPanel.classList.remove("oculto");
 }
 
+function cerrarTodo() {
+    juegoPausado = false;
+    enColision = false;
+    colisionPanel.classList.add("oculto");
+    ayudaPanel.classList.add("oculto");
+    actualizarPuntaje();
+}
+
 opcion1.onclick = () => {
+    frenadas++;
     colisionPanel.classList.add("oculto");
     ayudaPanel.classList.remove("oculto");
 };
 
 opcion2.onclick = () => {
+    frenadas++;
     puntaje -= 20;
-    cerrarColision();
+    cerrarTodo();
 };
+
+accion1.onclick = () => { puntaje += 10; cerrarTodo(); };
+accion2.onclick = () => { puntaje += 15; cerrarTodo(); };
+accion3.onclick = () => { puntaje += 20; cerrarTodo(); };
 
 /* ===========================
-   ACCIONES DE AYUDA
+   FINAL (ARREGLADO)
 =========================== */
 
-accion1.onclick = () => {
-    puntaje += 10;
-    alert("🛑 Has señalizado la vía y colocado conos.");
-    cerrarAyuda();
-};
+async function finalizar() {
 
-accion2.onclick = () => {
-    puntaje += 15;
-    alert("📞 Has llamado a las autoridades ambientales.");
-    cerrarAyuda();
-};
+    const data = {
+        puntaje: puntaje,
+        tiempo: document.getElementById("tiempo")?.innerText || 0,
+        velocidad: velocidad,
+        animales: animalesDetectados,
+        frenadas: frenadas,
+        atropellados: atropellados,
+        salvados: salvados
+    };
 
-accion3.onclick = () => {
-    puntaje += 20;
-    alert("🚑 Se solicitó apoyo veterinario.");
-    cerrarAyuda();
-};
+    try {
+        await fetch("/guardar_resultado", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body: new URLSearchParams(data)
+        });
 
-function cerrarAyuda() {
-    ayudaPanel.classList.add("oculto");
+        window.location.href = "/resultado";
 
-    enColision = false;
-    juegoPausado = false;
-
-    actualizarPuntaje();
-}
-
-function cerrarColision() {
-
-    colisionPanel.classList.add("oculto");
-
-    enColision = false;
-    juegoPausado = false;
-
-    if (puntaje < 0) puntaje = 0;
-
-    actualizarPuntaje();
+    } catch (error) {
+        console.log("Error:", error);
+        window.location.href = "/resultado";
+    }
 }
 
 /* ===========================
-   FINAL
+   🔥 BOTÓN FINAL (ARREGLO REAL)
 =========================== */
 
-function finalizarSimulacion() {
-    alert("SIMULACIÓN FINALIZADA\n\nPUNTAJE: " + puntaje);
-    location.reload();
-}
+document.addEventListener("DOMContentLoaded", () => {
+
+    const btn = document.getElementById("finalizar");
+
+    if (!btn) {
+        console.log("❌ Botón finalizar no encontrado");
+        return;
+    }
+
+    btn.addEventListener("click", () => {
+        console.log("🔥 Finalizar presionado");
+        finalizar();
+    });
+
+});
 
 /* ===========================
-   LOOP PRINCIPAL
+   LOOP
 =========================== */
 
-function actualizar() {
-
-    requestAnimationFrame(actualizar);
+function loop() {
+    requestAnimationFrame(loop);
 
     if (juegoPausado) return;
 
     if (teclas["w"]) aceleracion += fuerzaMotor;
+    if (teclas["s"]) aceleracion -= fuerzaFreno;
 
-    if (teclas["s"] && velocidad > 0)
-        aceleracion -= fuerzaFreno;
-
-    if (!teclas["w"] && !teclas["s"] && velocidad > 0)
+    if (!teclas["w"] && !teclas["s"]) {
         aceleracion -= friccion;
+    }
 
     velocidad += aceleracion;
 
-    if (velocidad > velocidadMax) velocidad = velocidadMax;
     if (velocidad < 0) velocidad = 0;
+    if (velocidad > velocidadMax) velocidad = velocidadMax;
 
     aceleracion = 0;
 
-    let direccion = 0;
+    let dir = 0;
 
-    if (teclas["a"]) direccion = -1;
-    if (teclas["d"]) direccion = 1;
+    if (teclas["a"]) dir = -1;
+    if (teclas["d"]) dir = 1;
 
-    x += direccion * (3 + velocidad * sensibilidadGiro);
+    x += dir * (2 + velocidad * sensibilidad);
 
-    let angulo = direccion * (10 + velocidad * 0.08);
+    if (x < limiteIzq) x = limiteIzq;
+    if (x > limiteDer) x = limiteDer;
 
-    let inclinacionFreno = 0;
-
-    if (teclas["s"] && velocidad > 0) {
-        inclinacionFreno = -6;
-    }
+    let ang = dir * (8 + velocidad * 0.05);
 
     vehiculo.style.transform =
-        `translate(-50%, -50%) rotate(${angulo}deg) skewY(${inclinacionFreno}deg)`;
+        `translate(-50%, -50%) translate(${x - window.innerWidth * 0.5}px, ${y - window.innerHeight * 0.48}px) rotate(${ang}deg)`;
 
-    if (x < limiteIzquierdo) x = limiteIzquierdo;
-    if (x > limiteDerecho) x = limiteDerecho;
-
-    vehiculo.style.left = x + "px";
-    vehiculo.style.top = y + "px";
-
-    mapaY += velocidad * 0.12;
-    mapa.style.transform = `translateY(${mapaY}px)`;
+    mapaY += velocidad * 0.18;
 
     if (mapaY >= 0) mapaY = -100;
+
+    mapa.style.transform = `translateY(${mapaY}px)`;
 
     velocidadTexto.innerText = Math.floor(velocidad);
 
@@ -381,106 +348,13 @@ function actualizar() {
     detectarColision();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-
-    const boton = document.getElementById("finalizar");
-
-    if (!boton) return;
-
-    boton.addEventListener("click", async () => {
-
-        const confirmar = confirm("¿Finalizar simulación?");
-
-        if (!confirmar) return;
-
-        const data = {
-            puntaje: document.getElementById("puntaje")?.innerText || 0,
-            tiempo: document.getElementById("tiempo")?.innerText || 0,
-            velocidad: document.getElementById("velocidad")?.innerText || 0,
-
-            animales: window.animalesDetectados || 0,
-            frenadas: window.frenadas || 0,
-            atropellados: window.atropellados || 0,
-            salvados: window.salvados || 0
-        };
-
-        // 🔥 1. primero guardar en Flask
-        await fetch("/guardar_resultado", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded"
-            },
-            body: new URLSearchParams(data)
-        });
-
-        // 🔥 2. luego ir a resultado
-        window.location.href = "/resultado";
-    });
-
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-
-    const boton = document.getElementById("finalizar");
-    if (!boton) return;
-
-    boton.addEventListener("click", async () => {
-
-        const confirmar = confirm("¿Finalizar simulación?");
-        if (!confirmar) return;
-
-        const getText = (id) => {
-            const el = document.getElementById(id);
-            return el ? el.innerText.trim() : "0";
-        };
-
-        const parseTime = (t) => {
-            // convierte "00:35" → segundos
-            if (!t.includes(":")) return Number(t) || 0;
-            const [m, s] = t.split(":").map(Number);
-            return (m * 60) + s;
-        };
-
-        const data = {
-            puntaje: Number(getText("puntaje") || 0),
-            tiempo: parseTime(getText("tiempo")),
-            velocidad: Number(getText("velocidad") || 0),
-
-            animales: window.animalesDetectados || 0,
-            frenadas: window.frenadas || 0,
-            atropellados: window.atropellados || 0,
-            salvados: window.salvados || 0
-        };
-
-        console.log("DATOS ENVIADOS:", data);
-
-        try {
-            await fetch("/guardar_resultado", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/x-www-form-urlencoded"
-                },
-                body: new URLSearchParams(data)
-            });
-
-            window.location.href = "/resultado";
-
-        } catch (error) {
-            console.error(error);
-            alert("Error guardando resultados");
-        }
-    });
-
-});
-
 /* ===========================
    INICIO
 =========================== */
 
-actualizarTiempo();
-actualizarPuntaje();
-
-setInterval(generarAnimal, 8000);
 setInterval(actualizarTiempo, 1000);
+setInterval(generarAnimal, intervaloAnimal);
 
-actualizar();
+actualizarPuntaje();
+actualizarTiempo();
+loop();

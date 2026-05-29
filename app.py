@@ -33,34 +33,16 @@ def obtener_datos(coleccion):
     docs = db.collection(coleccion).stream()
     return [doc.to_dict() for doc in docs]
 
-# ================= PÁGINAS BASE =================
-@app.route('/tibasosa')
-def tibasosa():
-    return render_template('tibasosa.html', datos=obtener_datos("Tibasosa"))
-
-@app.route('/corrales')
-def corrales():
-    return render_template('corrales.html', datos=obtener_datos("Corrales"))
-
-@app.route('/iza')
-def iza():
-    return render_template('iza.html', datos=obtener_datos("Iza"))
-
-# ================= API =================
-@app.route('/api/<coleccion>_animales')
-def api_animales(coleccion):
-    return jsonify(obtener_datos(coleccion.capitalize()))
-
 # ================= REGISTRO =================
 @app.route('/registro', methods=['GET', 'POST'])
 def registro():
     if request.method == 'POST':
-        session['nombre'] = request.form.get('nombre')
-        session['vehiculo'] = request.form.get('vehiculo')
+        session['nombre'] = request.form.get('nombre', '')
         return redirect(url_for('seleccion_carretera'))
+
     return render_template('registro.html')
 
-# ================= SELECCIÓN =================
+# ================= CARRETERA =================
 @app.route('/seleccion_carretera')
 def seleccion_carretera():
     return render_template('seleccion_carretera.html')
@@ -68,6 +50,7 @@ def seleccion_carretera():
 @app.route('/seleccion_vehiculo', methods=['POST'])
 def seleccion_vehiculo():
     carretera = request.form.get('carretera')
+
     if not carretera:
         return redirect(url_for('seleccion_carretera'))
 
@@ -78,9 +61,11 @@ def seleccion_vehiculo():
 def pagina_vehiculo():
     return render_template('seleccion_vehiculo.html')
 
+# ================= VEHÍCULO =================
 @app.route('/guardar_vehiculo', methods=['POST'])
 def guardar_vehiculo():
     vehiculo_simulador = request.form.get('vehiculo')
+
     if not vehiculo_simulador:
         return redirect(url_for('pagina_vehiculo'))
 
@@ -94,8 +79,16 @@ def opciones():
 
 @app.route('/guardar_opciones', methods=['POST'])
 def guardar_opciones():
-    session['clima'] = request.form.get('clima')
-    session['dificultad'] = request.form.get('dificultad')
+
+    session['dificultad'] = request.form.get('dificultad', 'normal')
+
+    # =====================
+    # 🔥 LÓGICA DE TIEMPO
+    # =====================
+    if session['dificultad'] == "dificil":
+        session['tiempo_base'] = 10
+    else:
+        session['tiempo_base'] = 20
 
     carretera = session.get('carretera')
 
@@ -120,40 +113,44 @@ def cargar_animales(coleccion):
             "Nivel de aparición": str(d.get("Nivel de aparición", "")),
             "Tipo de cruce": str(d.get("Tipo de cruce", ""))
         })
+
     return animales
 
 # ================= SIMULADORES =================
 @app.route('/simulador_tibasosa')
 def simulador_tibasosa():
-    return render_template('simulador_tibasosa.html',
+    return render_template(
+        'simulador_tibasosa.html',
         vehiculo=session.get('vehiculo_simulador'),
         carretera="Tibasosa",
-        clima=session.get('clima'),
         dificultad=session.get('dificultad'),
+        tiempo_base=session.get('tiempo_base'),
         animales=cargar_animales("Tibasosa")
     )
 
 @app.route('/simulador_corrales')
 def simulador_corrales():
-    return render_template('simulador_corrales.html',
+    return render_template(
+        'simulador_corrales.html',
         vehiculo=session.get('vehiculo_simulador'),
         carretera="Corrales",
-        clima=session.get('clima'),
         dificultad=session.get('dificultad'),
+        tiempo_base=session.get('tiempo_base'),
         animales=cargar_animales("Corrales")
     )
 
 @app.route('/simulador_iza')
 def simulador_iza():
-    return render_template('simulador_iza.html',
+    return render_template(
+        'simulador_iza.html',
         vehiculo=session.get('vehiculo_simulador'),
         carretera="Iza",
-        clima=session.get('clima'),
         dificultad=session.get('dificultad'),
+        tiempo_base=session.get('tiempo_base'),
         animales=cargar_animales("Iza")
     )
 
-# ================= GUARDAR RESULTADO (CLAVE) =================
+# ================= GUARDAR RESULTADOS =================
 @app.route('/guardar_resultado', methods=['POST'])
 def guardar_resultado():
 
@@ -161,19 +158,18 @@ def guardar_resultado():
     session['tiempo'] = request.form.get('tiempo', 0)
     session['velocidad'] = request.form.get('velocidad', 0)
 
-    session['animales'] = request.form.get('animales', 0)
+    session['animales_detectados'] = request.form.get('animales', 0)
     session['frenadas'] = request.form.get('frenadas', 0)
     session['atropellados'] = request.form.get('atropellados', 0)
     session['salvados'] = request.form.get('salvados', 0)
-
-    print("SESSION GUARDADA:", dict(session))
 
     return "ok"
 
 # ================= RESULTADO =================
 @app.route('/resultado')
 def resultado():
-    return render_template('resultado.html',
+    return render_template(
+        'resultado.html',
         puntaje=session.get('puntaje', 0),
         tiempo=session.get('tiempo', 0),
         velocidad=session.get('velocidad', 0),
@@ -181,13 +177,13 @@ def resultado():
         frenadas=session.get('frenadas', 0),
         atropellados=session.get('atropellados', 0),
         salvados=session.get('salvados', 0),
-        nombre=session.get('nombre'),
-        vehiculo=session.get('vehiculo_simulador'),
-        carretera=session.get('carretera'),
-        clima=session.get('clima'),
-        dificultad=session.get('dificultad')
+        nombre=session.get('nombre', ''),
+        vehiculo=session.get('vehiculo_simulador', ''),
+        carretera=session.get('carretera', ''),
+        dificultad=session.get('dificultad', '')
     )
 
+# ================= EXCEL =================
 @app.route('/descargar_excel')
 def descargar_excel():
 
@@ -197,6 +193,10 @@ def descargar_excel():
 
     datos = [
         ["Indicador", "Valor"],
+        ["Nombre", session.get('nombre', '')],
+        ["Vehículo", session.get('vehiculo_simulador', '')],
+        ["Carretera", session.get('carretera', '')],
+        ["Dificultad", session.get('dificultad', '')],
         ["Puntaje", session.get('puntaje', 0)],
         ["Tiempo", session.get('tiempo', 0)],
         ["Velocidad", session.get('velocidad', 0)],
@@ -209,17 +209,9 @@ def descargar_excel():
     for fila in datos:
         ws.append(fila)
 
-    # =========================
-    # 🔥 FIX DEL GRÁFICO
-    # =========================
-
     chart = BarChart()
-
-    # SOLO valores (columna B)
-    data = Reference(ws, min_col=2, min_row=2, max_row=len(datos))
-
-    # SOLO etiquetas (columna A)
-    cats = Reference(ws, min_col=1, min_row=2, max_row=len(datos))
+    data = Reference(ws, min_col=2, min_row=7, max_row=13)
+    cats = Reference(ws, min_col=1, min_row=7, max_row=13)
 
     chart.add_data(data, titles_from_data=False)
     chart.set_categories(cats)
@@ -237,6 +229,8 @@ def descargar_excel():
         download_name="resultados.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
     )
+
+# ================= WORD =================
 @app.route('/descargar_word')
 def descargar_word():
 
@@ -247,7 +241,6 @@ def descargar_word():
         ("Nombre", session.get('nombre', '')),
         ("Vehículo", session.get('vehiculo_simulador', '')),
         ("Carretera", session.get('carretera', '')),
-        ("Clima", session.get('clima', '')),
         ("Dificultad", session.get('dificultad', '')),
         ("Puntaje", session.get('puntaje', 0)),
         ("Tiempo", session.get('tiempo', 0)),

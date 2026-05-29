@@ -1,7 +1,6 @@
 /* ==========================
    RESET
 ========================== */
-
 *{
     margin:0;
     padding:0;
@@ -20,7 +19,6 @@ html,body{
 /* ==========================
    SIMULADOR
 ========================== */
-
 .simulador{
     position:fixed;
     inset:0;
@@ -31,7 +29,6 @@ html,body{
 /* ==========================
    CARRETERA
 ========================== */
-
 .carretera{
     position:absolute;
     inset:0;
@@ -44,6 +41,7 @@ html,body{
     inset:0;
     width:100%;
     height:100%;
+    overflow:hidden;
 }
 
 .fondo{
@@ -57,7 +55,6 @@ html,body{
 /* ==========================
    VEHÍCULO
 ========================== */
-
 .vehiculo{
     position:absolute;
     width:90px;
@@ -69,7 +66,6 @@ html,body{
 /* ==========================
    ANIMAL
 ========================== */
-
 .animal-movimiento{
     position:absolute;
     width:70px;
@@ -78,9 +74,8 @@ html,body{
 }
 
 /* ==========================
-   HUD (ARREGLADO PRO)
+   HUD
 ========================== */
-
 .hud{
     position:absolute;
     bottom:0;
@@ -102,9 +97,8 @@ html,body{
 }
 
 /* ==========================
-   TACÓMETRO (NO TOCAR)
+   TACÓMETRO
 ========================== */
-
 .tacometro{
     position:relative;
     width:220px;
@@ -177,13 +171,11 @@ html,body{
 }
 
 /* ==========================
-   INFO (TIEMPO Y PUNTAJE)
+   INFO
 ========================== */
-
 .info{
     width:180px;
     height:90px;
-
     background:rgba(20,25,40,0.92);
     border:1px solid #374151;
     border-radius:14px;
@@ -209,7 +201,6 @@ html,body{
 /* ==========================
    BOTÓN FINALIZAR
 ========================== */
-
 .btn-finalizar{
     padding:14px 26px;
     border:none;
@@ -228,30 +219,33 @@ html,body{
 }
 
 /* ==========================
-   PANEL ALERTA (MEJORADO)
+   PANEL PRECAUCIÓN MEJORADO
 ========================== */
-
 .panel{
     position:absolute;
-    top:15px;
-    right:15px;
+    top:18px;
+    right:18px;
 
-    width:340px;
-    height:calc(100vh - 180px);
+    width:380px;
+    height:calc(100vh - 190px);
 
-    background:rgba(255,255,255,0.97);
+    background:linear-gradient(180deg,#ffffff,#f8fafc);
     color:#111827;
 
-    padding:20px;
+    border-radius:20px;
+    padding:24px;
 
     display:flex;
     flex-direction:column;
-    gap:12px;
+    gap:16px;
 
     overflow-y:auto;
 
-    border-radius:16px;
-    box-shadow:0 20px 50px rgba(0,0,0,0.35);
+    box-shadow:
+        0 20px 50px rgba(0,0,0,.35),
+        inset 0 1px 0 rgba(255,255,255,.8);
+
+    border:2px solid #e5e7eb;
 
     z-index:9999;
 }
@@ -260,96 +254,130 @@ html,body{
     display:none !important;
 }
 
-/* ==========================
-   ALERTA
-========================== */
-
+/* ENCABEZADO */
 .panel h1{
-    color:#dc2626;
-    font-size:26px;
+    font-size:30px;
     text-align:center;
+    color:#dc2626;
+    font-weight:900;
 }
 
+.panel h2{
+    text-align:center;
+    color:#1f2937;
+    font-size:22px;
+}
+
+.panel p{
+    text-align:center;
+    color:#4b5563;
+    font-size:15px;
+    line-height:1.5;
+}
+
+/* SEÑAL */
 .senal{
-    width:100px;
-    margin:auto;
+    width:110px;
+    margin:0 auto;
+    display:block;
 }
 
+/* ALERTA RIESGO */
 .riesgo{
     background:#fee2e2;
-    color:#dc2626;
-    padding:10px;
-    border-radius:10px;
-    font-weight:bold;
+    color:#b91c1c;
+    padding:14px;
+    border-radius:14px;
     text-align:center;
+    font-weight:bold;
+    font-size:16px;
+    border:2px solid #fecaca;
 }
 
-/* ==========================
-   ANIMAL PANEL
-========================== */
-
+/* ANIMAL */
 .animal-circulo{
-    width:120px;
-    height:120px;
+    width:140px;
+    height:140px;
     border-radius:50%;
     background:#f3f4f6;
     display:flex;
     justify-content:center;
     align-items:center;
-    border:4px solid #d1d5db;
+    border:5px solid #d1d5db;
     margin:auto;
+    box-shadow:0 8px 20px rgba(0,0,0,.12);
 }
 
 .animal-img{
-    width:90px;
-    height:90px;
+    width:100px;
+    height:100px;
     object-fit:contain;
 }
 
-/* ==========================
-   OPCIONES
-========================== */
+/* CONFIGURACIÓN */
+.opciones-simulador{
+    background:#f9fafb;
+    padding:16px;
+    border-radius:16px;
+    border:1px solid #e5e7eb;
+}
+
+.opciones-simulador h2{
+    font-size:18px;
+    margin-bottom:12px;
+    color:#1e40af;
+}
 
 .item-opcion{
     display:flex;
     justify-content:space-between;
-    padding:10px;
-    background:#f3f4f6;
-    border-radius:10px;
+    align-items:center;
+    padding:12px 14px;
+    background:#fff;
+    border-radius:12px;
+    margin-bottom:10px;
     font-weight:bold;
+    border:1px solid #e5e7eb;
 }
 
 /* ==========================
-   COLISIÓN Y AYUDA (POPUP CENTRADO)
+   POPUPS
 ========================== */
-
 .colision{
     position:fixed;
     top:50%;
     left:50%;
     transform:translate(-50%,-50%);
-    width:350px;
+    width:380px;
 
-    background:rgba(0,0,0,0.92);
+    background:rgba(0,0,0,0.95);
     color:#fff;
 
-    padding:20px;
-    border-radius:14px;
+    padding:24px;
+    border-radius:18px;
 
     text-align:center;
     z-index:10000;
+    box-shadow:0 20px 40px rgba(0,0,0,.45);
+}
+
+.colision h2{
+    margin-bottom:15px;
 }
 
 .colision button{
     width:100%;
-    margin-top:10px;
-    padding:12px;
-
+    margin-top:12px;
+    padding:14px;
     border:none;
-    border-radius:10px;
-
+    border-radius:12px;
     font-weight:bold;
     cursor:pointer;
+    transition:.2s;
+}
+
+.colision button:hover{
+    transform:scale(1.02);
 }
 
 #opcion1,#accion3{

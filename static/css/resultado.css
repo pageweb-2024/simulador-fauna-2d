@@ -2,59 +2,54 @@ body {
     margin: 0;
     padding: 0;
     font-family: Arial, sans-serif;
-    background: #f2f2f2;
+    background: white;
     display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh;
 }
 
+/* CONTENEDOR PRINCIPAL */
 .contenedor {
-    width: 1000px;
-    background: #f5f5f5;
-    padding: 50px;
     text-align: center;
 }
 
+/* TITULO */
 h1 {
-    font-size: 65px;
+    font-size: 50px;
     font-weight: bold;
     color: black;
-    margin-bottom: 70px;
+    margin-bottom: 40px;
     line-height: 1.2;
 }
 
-.formatos {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-}
-
-.opcion {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-}
-
-.btn img {
-    width: 180px;
-    height: 180px;
-    object-fit: contain;
+/* EXCEL CENTRADO */
+.excel-container img {
+    width: 220px;
+    height: auto;
+    margin-bottom: 50px;
     transition: transform 0.3s ease;
 }
 
-.btn img:hover {
+.excel-container img:hover {
     transform: scale(1.08);
 }
 
+/* BOTONES */
+.botones {
+    display: flex;
+    justify-content: center;
+    gap: 60px;
+}
+
+/* BOTON ESTILO */
 button {
     background: #10b143;
     color: white;
     border: none;
-    padding: 18px 70px;
+    padding: 14px 60px;
     border-radius: 40px;
-    font-size: 24px;
+    font-size: 20px;
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -65,23 +60,18 @@ button:hover {
     transform: scale(1.05);
 }
 
-@media (max-width: 900px) {
-    .formatos {
-        flex-direction: column;
-        gap: 50px;
-    }
-
+/* RESPONSIVE */
+@media (max-width: 700px) {
     h1 {
-        font-size: 45px;
+        font-size: 35px;
     }
 
-    .btn img {
-        width: 140px;
-        height: 140px;
+    .excel-container img {
+        width: 160px;
     }
 
-    button {
-        font-size: 20px;
-        padding: 15px 50px;
+    .botones {
+        flex-direction: column;
+        gap: 20px;
     }
 }
