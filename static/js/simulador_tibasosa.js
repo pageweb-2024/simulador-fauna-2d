@@ -110,7 +110,7 @@ let animalY = 0;
 let animalDX = 0;
 let animalActivo = false;
 
-let velocidadAnimal = 4;
+let velocidadAnimal = 7;
 
 let intervaloAnimal = parseInt(localStorage.getItem("tiempoAparicion")) || 20000;
 
