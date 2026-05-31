@@ -82,7 +82,7 @@ animal.style.zIndex = "9999";
 
 let juegoPausado = false;
 let enColision = false;
-let tiempoTotal = 600;
+let tiempoTotal = 300;
 let puntaje = 0;
 
 let x = window.innerWidth * 0.5;
