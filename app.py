@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify, send_file
 import firebase_admin
 from firebase_admin import credentials, firestore
+from docx import Document
 from openpyxl import Workbook
 from openpyxl.chart import BarChart, Reference
 import io
@@ -11,10 +12,7 @@ app.secret_key = "simuladorfauna"
 
 # ================= FIREBASE =================
 cred = credentials.Certificate("faunasimulador.json")
-
-if not firebase_admin._apps:
-    firebase_admin.initialize_app(cred)
-
+firebase_admin.initialize_app(cred)
 db = firestore.client()
 
 # ================= HOME =================
@@ -30,7 +28,6 @@ def instrucciones():
 def tablas():
     return render_template('tablas.html')
 
-# ================= TABLAS =================
 @app.route('/tibasosa')
 def tibasosa():
     docs = db.collection("Tibasosa").stream()
@@ -57,29 +54,10 @@ def iza():
 
     return render_template('iza.html', datos=animales)
 
-# ================= FIREBASE =================
-def cargar_animales(coleccion):
-    try:
-        docs = list(db.collection(coleccion).stream())
-
-        animales = []
-
-        for doc in docs:
-            d = doc.to_dict()
-
-            animales.append({
-                "Animal": str(d.get("Animal", "")),
-                "Imagen": str(d.get("Imagen", "")),
-                "Información": str(d.get("Información", "")),
-                "Nivel de aparición": str(d.get("Nivel de aparición", "")),
-                "Tipo de cruce": str(d.get("Tipo de cruce", ""))
-            })
-
-        return animales
-
-    except Exception as e:
-        print("🔥 ERROR FIREBASE:", e)
-        return []
+# ================= FIRESTORE =================
+def obtener_datos(coleccion):
+    docs = db.collection(coleccion).stream()
+    return [doc.to_dict() for doc in docs]
 
 # ================= REGISTRO =================
 @app.route('/registro', methods=['GET', 'POST'])
@@ -130,6 +108,9 @@ def guardar_opciones():
 
     session['dificultad'] = request.form.get('dificultad', 'normal')
 
+    # =====================
+    # 🔥 LÓGICA DE TIEMPO
+    # =====================
     if session['dificultad'] == "dificil":
         session['tiempo_base'] = 10
     else:
@@ -144,15 +125,32 @@ def guardar_opciones():
     else:
         return redirect(url_for('simulador_tibasosa'))
 
+# ================= ANIMALES =================
+def cargar_animales(coleccion):
+    docs = db.collection(coleccion).stream()
+    animales = []
+
+    for doc in docs:
+        d = doc.to_dict()
+        animales.append({
+            "Animal": str(d.get("Animal", "")),
+            "Imagen": str(d.get("Imagen", "")),
+            "Información": str(d.get("Información", "")),
+            "Nivel de aparición": str(d.get("Nivel de aparición", "")),
+            "Tipo de cruce": str(d.get("Tipo de cruce", ""))
+        })
+
+    return animales
+
 # ================= SIMULADORES =================
 @app.route('/simulador_tibasosa')
 def simulador_tibasosa():
     return render_template(
         'simulador_tibasosa.html',
-        vehiculo=session.get('vehiculo_simulador', ''),
+        vehiculo=session.get('vehiculo_simulador'),
         carretera="Tibasosa",
-        dificultad=session.get('dificultad', ''),
-        tiempo_base=session.get('tiempo_base', 0),
+        dificultad=session.get('dificultad'),
+        tiempo_base=session.get('tiempo_base'),
         animales=cargar_animales("Tibasosa")
     )
 
@@ -160,10 +158,10 @@ def simulador_tibasosa():
 def simulador_corrales():
     return render_template(
         'simulador_corrales.html',
-        vehiculo=session.get('vehiculo_simulador', ''),
+        vehiculo=session.get('vehiculo_simulador'),
         carretera="Corrales",
-        dificultad=session.get('dificultad', ''),
-        tiempo_base=session.get('tiempo_base', 0),
+        dificultad=session.get('dificultad'),
+        tiempo_base=session.get('tiempo_base'),
         animales=cargar_animales("Corrales")
     )
 
@@ -171,12 +169,27 @@ def simulador_corrales():
 def simulador_iza():
     return render_template(
         'simulador_iza.html',
-        vehiculo=session.get('vehiculo_simulador', ''),
+        vehiculo=session.get('vehiculo_simulador'),
         carretera="Iza",
-        dificultad=session.get('dificultad', ''),
-        tiempo_base=session.get('tiempo_base', 0),
+        dificultad=session.get('dificultad'),
+        tiempo_base=session.get('tiempo_base'),
         animales=cargar_animales("Iza")
     )
+
+# ================= GUARDAR RESULTADOS =================
+@app.route('/guardar_resultado', methods=['POST'])
+def guardar_resultado():
+
+    session['puntaje'] = request.form.get('puntaje', 0)
+    session['tiempo'] = request.form.get('tiempo', 0)
+    session['velocidad'] = request.form.get('velocidad', 0)
+
+    session['animales_detectados'] = request.form.get('animales', 0)
+    session['frenadas'] = request.form.get('frenadas', 0)
+    session['atropellados'] = request.form.get('atropellados', 0)
+    session['salvados'] = request.form.get('salvados', 0)
+
+    return "ok"
 
 # ================= RESULTADO =================
 @app.route('/resultado')
@@ -241,6 +254,45 @@ def descargar_excel():
         as_attachment=True,
         download_name="resultados.xlsx",
         mimetype="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+
+# ================= WORD =================
+@app.route('/descargar_word')
+def descargar_word():
+
+    doc = Document()
+    doc.add_heading('RESULTADOS DEL SIMULADOR', 0)
+
+    datos = [
+        ("Nombre", session.get('nombre', '')),
+        ("Vehículo", session.get('vehiculo_simulador', '')),
+        ("Carretera", session.get('carretera', '')),
+        ("Dificultad", session.get('dificultad', '')),
+        ("Puntaje", session.get('puntaje', 0)),
+        ("Tiempo", session.get('tiempo', 0)),
+        ("Velocidad", session.get('velocidad', 0)),
+        ("Animales Detectados", session.get('animales_detectados', 0)),
+        ("Frenadas", session.get('frenadas', 0)),
+        ("Atropellados", session.get('atropellados', 0)),
+        ("Salvados", session.get('salvados', 0))
+    ]
+
+    table = doc.add_table(rows=len(datos), cols=2)
+    table.style = 'Table Grid'
+
+    for i, (k, v) in enumerate(datos):
+        table.rows[i].cells[0].text = str(k)
+        table.rows[i].cells[1].text = str(v)
+
+    archivo = io.BytesIO()
+    doc.save(archivo)
+    archivo.seek(0)
+
+    return send_file(
+        archivo,
+        as_attachment=True,
+        download_name="resultados.docx",
+        mimetype="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     )
 
 # ================= MAIN =================
