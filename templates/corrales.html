@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="{{ url_for('static', filename='css/tibasosa.css') }}">
 
-    <title>Tibasosa</title>
+    <title>Corrales</title>
 
 </head>
 
@@ -19,40 +19,43 @@
 
     <table border="1">
 
-        <tr>
+        <thead>
+            <tr>
+                <th>Animal</th>
+                <th>Nivel</th>
+                <th>Cruce</th>
+                <th>Información</th>
+            </tr>
+        </thead>
 
-            <th>Animal</th>
+        <tbody>
 
-            <th>Nivel</th>
+            {% if datos and datos|length > 0 %}
 
-            <th>Cruce</th>
+                {% for fila in datos %}
+                <tr>
+                    <td>{{ fila.get("Animal", "") }}</td>
+                    <td>{{ fila.get("Nivel de aparición", "") }}</td>
+                    <td>{{ fila.get("Tipo de cruce", "") }}</td>
+                    <td>{{ fila.get("Información", "") }}</td>
+                </tr>
+                {% endfor %}
 
-            <th>Información</th>
+            {% else %}
 
-        </tr>
+                <tr>
+                    <td colspan="4">No hay datos en Firebase para Corrales</td>
+                </tr>
 
-        {% for fila in datos %}
+            {% endif %}
 
-        <tr>
-
-            <td>{{ fila["Animal"] }}</td>
-
-            <td>{{ fila["Nivel de aparición"] }}</td>
-
-            <td>{{ fila["Tipo de cruce"] }}</td>
-
-            <td>{{ fila["Información"] }}</td>
-
-        </tr>
-
-        {% endfor %}
+        </tbody>
 
     </table>
 
     <button onclick="window.location.href='/tablas'">
         Volver
     </button>
-
 
 </body>
 
