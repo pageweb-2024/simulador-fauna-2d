@@ -96,9 +96,9 @@ let aceleracion = 0;
 let mapaY = -100;
 
 const velocidadMax = 160;
-const fuerzaMotor = 0.35;
-const fuerzaFreno = 1.5;
-const friccion = 0.05;
+const fuerzaMotor = 2.1;
+const fuerzaFreno = 1.9;
+const friccion = 0.02;
 const sensibilidad = 0.08;
 
 /* ===========================
