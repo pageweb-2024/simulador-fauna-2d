@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static', filename= 'css/registro.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/registro.css') }}">
     <title>Registro</title>
 </head>
 
@@ -12,9 +12,23 @@
 
     <main class="contenedor-registro">
 
-        <h1>Identificacion del conductor</h1>
+        <h1>Identificación del conductor</h1>
 
-        <!-- 🔥 AHORA ENVÍA A /registro -->
+         <!-- MENSAJE INFORMATIVO -->
+         <div class="mensaje-informativo">
+
+            <p>
+                Bienvenido al Simulador de FaunaVial 2D. Esta herramienta
+                tiene como propósito sensibilizar a los conductores sobre la importancia
+                de proteger las especies silvestres que habitan cerca de las vías. A través
+                de escenarios interactivos, el usuario podrá identificar situaciones de
+                riesgo y fortalecer prácticas de conducción responsable que contribuyan a
+                la conservación de la biodiversidad y a la reducción de accidentes
+                relacionados con fauna silvestre.
+            </p>
+
+        </div>
+
         <form action="/registro" method="POST">
 
             <!-- NOMBRE -->
@@ -26,10 +40,11 @@
 
             </div>
 
+
             <!-- VEHÍCULO -->
             <div id="campo">
 
-                <label>¿Qué tipo de vehículo utiliza?</label>
+                <label>Seleccione el vehículo que utiliza con mayor frecuencia</label>
 
                 <div id="grupo-vehiculos">
 
@@ -37,7 +52,7 @@
 
                         <span>Automóvil</span>
 
-                        <select name="vehiculo">
+                        <select name="vehiculo" required>
                             <option value="">Seleccione</option>
                             <option value="Automovil">Particular</option>
                             <option value="Camioneta">Camioneta</option>
@@ -50,14 +65,6 @@
                         <span>Motocicleta</span>
 
                         <input type="radio" name="vehiculo" value="Motocicleta">
-
-                    </div>
-
-                    <div class="vehiculo-item">
-
-                        <span>Bicicleta</span>
-
-                        <input type="radio" name="vehiculo" value="Bicicleta">
 
                     </div>
 

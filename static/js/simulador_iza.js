@@ -42,16 +42,13 @@ sonidoChoque.volume = 1;
    CONFIGURAR DIFICULTAD
 ========================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+const dificultad = localStorage.getItem("dificultad");
 
-    const dificultad = localStorage.getItem("dificultad");
-
-    if (dificultad === "dificil") {
-        localStorage.setItem("tiempoAparicion", "10000");
-    } else {
-        localStorage.setItem("tiempoAparicion", "20000");
-    }
-});
+if (dificultad === "Dificil") {
+    localStorage.setItem("tiempoAparicion", "10000");
+} else {
+    localStorage.setItem("tiempoAparicion", "20000");
+}
 
 /* ===========================
    CONTADORES
@@ -113,6 +110,9 @@ let animalActivo = false;
 let velocidadAnimal = 7;
 
 let intervaloAnimal = parseInt(localStorage.getItem("tiempoAparicion")) || 20000;
+console.log("Dificultad:", dificultad);
+console.log("Intervalo:", intervaloAnimal);
+
 
 /* ===========================
    TECLAS
